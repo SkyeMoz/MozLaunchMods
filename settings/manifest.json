@@ -3,37 +3,15 @@
   "subtitle": "by SkyeMoz",
   "items": [
     {
-      "title": "RyzonX Hub",
-      "description": "Main hub for tools and utilities.",
+      "title": "Among Us",
+      "description": "26.4.7 | Unlocked all skins, no ads 🦊🟢",
       "type": "Apps",
-      "tag": "Utility",
-      "size": "2.3 MB",
+      "tag": "Unlocked Skins",
+      "size": "843 MB",
       "date": "2026-05-02",
       "icon": "tools",
-      "thumbnail": "./assets/ryzonx.png",
-      "launch": "https://your-link-here.com"
-    },
-    {
-      "title": "Moz Studio",
-      "description": "Creator dashboard and management panel.",
-      "type": "Apps",
-      "tag": "Creator",
-      "size": "3.1 MB",
-      "date": "2026-05-01",
-      "icon": "note",
-      "thumbnail": "./assets/mozstudio.png",
-      "launch": "https://your-link-here.com"
-    },
-    {
-      "title": "Speed Racer",
-      "description": "Fast-paced racing game with smooth controls.",
-      "type": "Games",
-      "tag": "Racing",
-      "size": "5.6 MB",
-      "date": "2026-04-30",
-      "icon": "car",
-      "thumbnail": "./assets/racer.png",
-      "launch": "https://your-link-here.com"
+      "thumbnail": "./assets/amongus.png",
+      "launch": "https://mega.nz/file/NyVhhQhS#uqn6Hbu8pYNA53YYjjUBdYMnz8gDJJd2EVxjGcTxRdM"
     }
   ]
 }
