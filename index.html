@@ -1,620 +1,1114 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#07111f" />
-  <title>MozLaunch</title>
+  <meta name="theme-color" content="#0f172a" />
+  <title>MozLaunch Firebase</title>
   <style>
     :root{
-      --bg0:#050b16;
-      --bg1:#081220;
-      --bg2:#0d1a2d;
-      --glass:rgba(9, 18, 32, .58);
-      --glass-strong:rgba(12, 23, 41, .78);
-      --line:rgba(148, 163, 184, .12);
-      --line-strong:rgba(96, 165, 250, .18);
-      --text:#e5eefc;
-      --muted:#91a4c2;
-      --accent:#3b82f6;
-      --accent2:#7c3aed;
-      --accent3:#22d3ee;
-      --shadow:0 28px 70px rgba(0,0,0,.36);
-      --shadow-soft:0 18px 44px rgba(0,0,0,.22);
-      --nav-h:76px;
+      --bg:#0f172a;
+      --bg2:#111827;
+      --panel:rgba(15,23,42,.72);
+      --panel2:rgba(30,41,59,.78);
+      --card:rgba(17,24,39,.88);
+      --card2:rgba(30,41,59,.82);
+      --border:rgba(148,163,184,.14);
+      --text:#e5eefb;
+      --muted:#94a3b8;
+      --accent:#2563eb;
+      --accent2:#8b5cf6;
+      --accent3:#06b6d4;
+      --good:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --shadow:0 24px 80px rgba(2,6,23,.45);
+      --shadow-soft:0 12px 32px rgba(2,6,23,.22);
+      --radius-xl:30px;
+      --radius-lg:22px;
+      --radius-md:16px;
+      --radius-sm:12px;
+      --nav-h:72px;
     }
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{
-      margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    body.theme-gray{
+      --bg:#111827; --bg2:#1f2937; --accent:#64748b; --accent2:#94a3b8; --accent3:#cbd5e1;
+    }
+    body.theme-navy{
+      --bg:#0f172a; --bg2:#111827; --accent:#2563eb; --accent2:#8b5cf6; --accent3:#06b6d4;
+    }
+    body.theme-yellow{
+      --bg:#1f1300; --bg2:#2b1a00; --accent:#f59e0b; --accent2:#f97316; --accent3:#eab308;
+    }
+    body.theme-light{
+      --bg:#f8fafc; --bg2:#eef2ff; --panel:rgba(255,255,255,.82); --panel2:rgba(255,255,255,.72);
+      --card:rgba(255,255,255,.92); --card2:rgba(241,245,249,.86); --border:rgba(15,23,42,.08);
+      --text:#0f172a; --muted:#64748b; --shadow:0 24px 70px rgba(15,23,42,.10); --shadow-soft:0 12px 28px rgba(15,23,42,.08);
+    }
+    body.theme-dark{
+      --bg:#030712; --bg2:#0f172a; --panel:rgba(2,6,23,.78); --panel2:rgba(15,23,42,.74);
+      --card:rgba(15,23,42,.90); --card2:rgba(30,41,59,.85); --border:rgba(148,163,184,.16);
+      --text:#f8fafc; --muted:#94a3b8; --shadow:0 24px 80px rgba(0,0,0,.55); --shadow-soft:0 12px 32px rgba(0,0,0,.30);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at 10% 12%, rgba(59,130,246,.14), transparent 26%),
-        radial-gradient(circle at 90% 4%, rgba(124,58,237,.15), transparent 22%),
-        radial-gradient(circle at 50% 100%, rgba(34,211,238,.08), transparent 26%),
-        linear-gradient(180deg,var(--bg0),var(--bg1) 44%,var(--bg2));
+        radial-gradient(circle at 12% 18%, rgba(59,130,246,.18), transparent 24%),
+        radial-gradient(circle at 88% 10%, rgba(139,92,246,.16), transparent 20%),
+        radial-gradient(circle at 50% 110%, rgba(6,182,212,.10), transparent 24%),
+        linear-gradient(180deg,var(--bg2),var(--bg));
       overflow-x:hidden;
-      user-select:none;
-      -webkit-user-select:none;
     }
     body::before{
-      content:"";position:fixed;inset:0;pointer-events:none;
-      background:linear-gradient(135deg,rgba(255,255,255,.07),transparent 24%,rgba(255,255,255,.03));
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.08), transparent 22%, rgba(255,255,255,.03)),
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,.08), transparent 32%);
       z-index:0;
     }
-    canvas{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}
-    #bgCanvas{z-index:0} #fxCanvas{z-index:1}
-    .app{position:relative;z-index:2;min-height:100vh;padding:18px}
-    .wrap{width:min(1380px,100%);margin:0 auto;display:grid;gap:16px;padding-top:calc(var(--nav-h) + 8px)}
-    .glass{background:linear-gradient(180deg,var(--glass-strong),var(--glass));border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%)}
-
-    .nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:min(1380px,calc(100% - 20px));height:var(--nav-h);border-radius:999px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px 12px 16px}
-    .brand{display:flex;align-items:center;gap:12px;min-width:0;cursor:pointer;padding:6px 10px 6px 6px;border-radius:999px;transition:transform 160ms ease,background 160ms ease,box-shadow 160ms ease}
-    .brand:hover{transform:translateY(-1px);background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(15,23,42,.18)}
-    .brandMark{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;flex:0 0 auto;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 14px 28px rgba(59,130,246,.24)}
+    .shell{position:relative;z-index:1;min-height:100vh;padding:18px}
+    .wrap{width:min(1360px,100%);margin:0 auto;padding-top:calc(var(--nav-h) + 18px);display:grid;gap:16px}
+    .glass{
+      background:linear-gradient(180deg,var(--panel),var(--panel2));
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(26px) saturate(160%);
+      -webkit-backdrop-filter:blur(26px) saturate(160%);
+    }
+    .nav{
+      position:fixed;top:14px;left:50%;transform:translateX(-50%);
+      z-index:50;width:min(1360px,calc(100% - 18px));height:var(--nav-h);
+      border-radius:999px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px 10px 14px;
+    }
+    .brand{
+      display:inline-flex;align-items:center;gap:12px;min-width:0;border:0;background:transparent;color:var(--text);
+      cursor:pointer;padding:6px 10px 6px 6px;border-radius:999px;text-decoration:none;
+    }
+    .brand:hover{background:rgba(255,255,255,.06)}
+    .brandMark{
+      width:46px;height:46px;border-radius:16px;display:grid;place-items:center;flex:0 0 auto;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 16px 30px rgba(59,130,246,.24);
+    }
     .brandText{min-width:0;display:grid;gap:2px}
-    .brandText strong{font-size:1rem;line-height:1.1;letter-spacing:.2px}
-    .brandText span{font-size:.86rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34ch}
-    .navCenter{display:flex;align-items:center;gap:10px;flex:1;justify-content:center;min-width:0}
-    .navLink{display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;background:transparent;color:var(--muted);font-weight:800;font-size:.92rem;padding:10px 14px;border-radius:999px;cursor:pointer;transition:transform 160ms ease,background 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease;text-decoration:none;white-space:nowrap}
-    .navLink:hover,.navLink.active{color:var(--text);background:rgba(255,255,255,.06);border-color:rgba(96,165,250,.16);box-shadow:0 10px 24px rgba(0,0,0,.12);transform:translateY(-1px)}
-    .navRight{display:flex;align-items:center;gap:10px;flex:0 0 auto}
-    .statusPill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);font-weight:800;font-size:.9rem;white-space:nowrap}
-    .dot{width:9px;height:9px;border-radius:999px;background:#22c55e;box-shadow:0 0 0 5px rgba(34,197,94,.14)}
-
-    .hero{border-radius:36px;padding:22px;animation:rise .7s ease both}
-    .heroTop{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch}
-    .heroCopy{display:grid;gap:14px;align-content:start;min-width:0}
-    .heroBadgeRow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-    .badge{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:10px 14px;font-size:.88rem;font-weight:800;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);box-shadow:0 10px 20px rgba(0,0,0,.12)}
-    .hero h1{margin:0;font-size:clamp(2rem,4vw,3.8rem);line-height:1;letter-spacing:-.04em}
-    .hero p{margin:0;max-width:68ch;color:var(--muted);line-height:1.6;font-size:1rem}
-    .heroStats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .statCard{border-radius:24px;padding:16px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid var(--line);box-shadow:var(--shadow-soft);min-height:106px;display:grid;align-content:space-between;gap:12px}
-    .statIcon{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;background:rgba(59,130,246,.12);border:1px solid rgba(96,165,250,.12)}
-    .statCard strong{display:block;font-size:1.2rem;line-height:1.1;margin-top:2px}
-    .statCard span{font-size:.88rem;color:var(--muted)}
-
-    .toolbar{border-radius:28px;padding:14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;animation:rise .78s ease both}
-    .search{position:relative;min-width:0}
-    .search input{width:100%;border:1px solid var(--line);background:rgba(2,6,23,.38);color:var(--text);padding:16px 16px 16px 50px;border-radius:18px;outline:none;font-size:1rem;transition:border-color 160ms ease,box-shadow 160ms ease,transform 160ms ease,background 160ms ease;user-select:text;-webkit-user-select:text}
-    .search input:focus{border-color:rgba(59,130,246,.34);box-shadow:0 0 0 4px rgba(59,130,246,.12);transform:translateY(-1px);background:rgba(2,6,23,.56)}
-    .searchIcon{position:absolute;left:16px;top:50%;transform:translateY(-50%);opacity:.82;pointer-events:none}
-    .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .chip{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);padding:11px 14px;border-radius:999px;font-size:.9rem;font-weight:800;cursor:pointer;transition:transform 160ms ease,background 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease;display:inline-flex;align-items:center;gap:8px}
-    .chip:hover,.chip.active{transform:translateY(-1px);color:var(--text);background:rgba(255,255,255,.07);border-color:rgba(96,165,250,.2);box-shadow:0 12px 24px rgba(0,0,0,.12)}
-    .count{white-space:nowrap;color:var(--muted);font-weight:800;padding:11px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
-
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;padding-bottom:8px}
-    .card{position:relative;overflow:hidden;border-radius:30px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));backdrop-filter:blur(24px) saturate(165%);-webkit-backdrop-filter:blur(24px) saturate(165%);box-shadow:var(--shadow-soft);padding:18px;opacity:0;transform:translateY(18px) scale(.985);animation:cardIn .72s ease forwards;transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;min-height:340px;display:grid;grid-template-rows:auto auto 1fr auto auto;gap:14px}
-    .card:hover{transform:translateY(-4px) scale(1);border-color:rgba(96,165,250,.2);box-shadow:0 26px 54px rgba(0,0,0,.26)}
-    .cardGlow{position:absolute;inset:auto -20% -30% auto;width:250px;height:250px;background:radial-gradient(circle,rgba(59,130,246,.11),transparent 72%);pointer-events:none;filter:blur(10px)}
-    .cardTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-    .appInfo{display:flex;gap:14px;min-width:0;flex:1}
-    .appThumb{width:74px;height:74px;border-radius:22px;overflow:hidden;flex:0 0 auto;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(124,58,237,.12));border:1px solid var(--line);box-shadow:0 14px 24px rgba(0,0,0,.12);display:grid;place-items:center}
-    .appThumb img{width:100%;height:100%;object-fit:cover;display:block}
-    .appIconFallback{color:#d9e6fb;display:grid;place-items:center}
-    .appText{min-width:0;flex:1;display:grid;gap:7px}
-    .titleRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    .titleRow h2{margin:0;font-size:1.06rem;line-height:1.15;letter-spacing:-.02em}
-    .tag{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:.76rem;font-weight:900;letter-spacing:.2px;color:#dbeafe;border:1px solid rgba(96,165,250,.18);background:rgba(59,130,246,.10)}
-    .desc{margin:0;color:var(--muted);line-height:1.56;font-size:.96rem;min-height:3.1lh}
-    .meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;color:#d7e5fb;font-size:.88rem;font-weight:700;padding-top:2px}
-    .metaItem{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
-    .launchBtn{width:100%;border:0;border-radius:18px;padding:13px 16px;color:#fff;cursor:pointer;font-weight:900;font-size:.98rem;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 16px 28px rgba(59,130,246,.18);transition:transform 160ms ease,filter 160ms ease,box-shadow 160ms ease,opacity 160ms ease}
-    .launchBtn:hover{transform:translateY(-1px);filter:brightness(1.03);box-shadow:0 18px 30px rgba(0,0,0,.12)}
-    .launchBtn:disabled{opacity:.82;cursor:wait;transform:none}
-    .progress{display:none;gap:10px;padding-top:2px}
-    .progress.active{display:grid}
-    .progressTop{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#d7e5fb;font-size:.87rem;font-weight:800}
-    .bar{height:11px;border-radius:999px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.04)}
-    .bar>span{display:block;height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--accent3),var(--accent2));transition:width 120ms linear}
-    .empty{grid-column:1 / -1;padding:40px 20px;text-align:center;color:var(--muted);border-radius:28px;border:1px dashed rgba(148,163,184,.18);background:rgba(255,255,255,.03);backdrop-filter:blur(18px)}
-    .footer{color:rgba(145,164,194,.75);font-size:.84rem;text-align:center;padding:2px 0 10px}
-    .srOnly{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-    ::selection{background:rgba(59,130,246,.28);color:#eff6ff}
-    ::-moz-selection{background:rgba(59,130,246,.28);color:#eff6ff}
-    img,a,button,input,textarea{-webkit-user-drag:none}
-    svg{display:block;flex:0 0 auto}
-    @keyframes rise{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes cardIn{to{opacity:1;transform:translateY(0) scale(1)}}
-    @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @media (max-width:1060px){
-      .heroTop{grid-template-columns:1fr}
-      .heroStats{grid-template-columns:repeat(3,1fr)}
+    .brandText strong{font-size:1rem;line-height:1.05;letter-spacing:.2px}
+    .brandText span{font-size:.86rem;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:30ch}
+    .navCenter{display:flex;align-items:center;gap:8px;min-width:0;flex:1;justify-content:center}
+    .navLink{
+      text-decoration:none;color:var(--muted);font-weight:800;font-size:.92rem;padding:10px 14px;border-radius:999px;border:1px solid transparent;
+      display:inline-flex;align-items:center;gap:8px;white-space:nowrap;transition:transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .navLink:hover,.navLink.active{color:var(--text);background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.08);transform:translateY(-1px)}
+    .navRight{display:flex;gap:10px;align-items:center;flex:0 0 auto}
+    .iconBtn,.chip,.btn,.themeBtn,.drawerBtn,.starBtn,.rateBtn,.smallBtn,.cardBtn{
+      border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;
+      border-radius:999px;transition:transform .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease, opacity .16s ease;
+    }
+    .iconBtn:hover,.chip:hover,.btn:hover,.themeBtn:hover,.drawerBtn:hover,.starBtn:hover,.rateBtn:hover,.smallBtn:hover,.cardBtn:hover{transform:translateY(-1px);background:rgba(255,255,255,.07)}
+    .drawerBtn{width:46px;height:46px;display:grid;place-items:center}
+    .iconBtn{width:46px;height:46px;display:grid;place-items:center}
+    .smallBtn{padding:10px 14px;font-weight:800;display:inline-flex;align-items:center;gap:8px}
+    .btn{padding:12px 16px;font-weight:900;display:inline-flex;align-items:center;gap:10px}
+    .chip{padding:10px 14px;font-size:.9rem;font-weight:800;display:inline-flex;align-items:center;gap:8px}
+    .hero{
+      display:grid;grid-template-columns:1.3fr .7fr;gap:16px;
+    }
+    .heroLeft,.heroRight,.panel,.modalCard{border-radius:var(--radius-xl)}
+    .heroLeft{padding:22px}
+    .heroRight{padding:18px;display:grid;gap:12px;align-content:start}
+    .heroTitle{display:grid;gap:8px}
+    .heroTitle h1{margin:0;font-size:clamp(2rem,4vw,3.8rem);line-height:1.02;letter-spacing:-.05em}
+    .heroTitle p{margin:0;color:var(--muted);font-size:1rem;line-height:1.6;max-width:68ch}
+    .heroStats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+    .stat{
+      padding:16px;border-radius:20px;background:linear-gradient(180deg,var(--card),var(--card2));
+      border:1px solid var(--border);box-shadow:var(--shadow-soft)
+    }
+    .stat strong{display:block;font-size:1.3rem}
+    .stat span{display:block;color:var(--muted);font-size:.86rem;margin-top:4px}
+    .searchRow{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;margin-top:18px}
+    .search{
+      width:100%;padding:16px 18px;border-radius:20px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);
+      outline:none;font-size:1rem;box-shadow:var(--shadow-soft)
+    }
+    .search::placeholder{color:var(--muted)}
+    .sortRow{display:flex;gap:10px;flex-wrap:wrap}
+    .sortRow .chip.active,.themeBtn.active,.navLink.active{background:linear-gradient(135deg, rgba(37,99,235,.25), rgba(139,92,246,.22));border-color:rgba(255,255,255,.16);color:var(--text)}
+    .notice{
+      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+      padding:16px 18px;border-radius:22px;background:linear-gradient(135deg,rgba(37,99,235,.18),rgba(139,92,246,.12));
+      border:1px solid var(--border)
+    }
+    .notice strong{display:block;font-size:1rem}
+    .notice span{display:block;color:var(--muted);font-size:.92rem;margin-top:4px}
+    .sectionHead{
+      display:flex;align-items:end;justify-content:space-between;gap:12px;margin-top:2px;
+    }
+    .sectionHead h2{margin:0;font-size:1.2rem}
+    .sectionHead p{margin:0;color:var(--muted);font-size:.92rem}
+    .grid{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;
+    }
+    .card{
+      overflow:hidden;border-radius:26px;border:1px solid var(--border);background:linear-gradient(180deg,var(--card),var(--card2));
+      box-shadow:var(--shadow-soft);display:grid;min-height:100%;
+    }
+    .banner{
+      position:relative;aspect-ratio:16/9;overflow:hidden;background:rgba(255,255,255,.05);
+      border-bottom:1px solid var(--border);
+    }
+    .banner img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.01)}
+    .bannerOverlay{
+      position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%, rgba(2,6,23,.60));
+    }
+    .cardTop{
+      position:absolute;inset:auto 0 0 0;padding:14px;display:flex;align-items:end;justify-content:space-between;gap:10px;
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:8px 10px;font-weight:800;font-size:.8rem;
+      background:rgba(0,0,0,.30);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.16)
+    }
+    .cardBody{padding:16px;display:grid;gap:12px}
+    .cardTitle{display:flex;align-items:start;justify-content:space-between;gap:10px}
+    .cardTitle h3{margin:0;font-size:1.05rem;line-height:1.25}
+    .cardMeta{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{
+      display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:999px;font-size:.82rem;font-weight:800;
+      background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text)
+    }
+    .desc{
+      color:var(--muted);line-height:1.55;font-size:.94rem;overflow:hidden;
+    }
+    .desc.clamped{
+      display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+    }
+    .cardActions{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:4px
+    }
+    .actionsLeft,.actionsRight{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .cardBtn{
+      padding:11px 14px;font-weight:900;display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text)
+    }
+    .cardBtn.primary{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:white;
+      box-shadow:0 16px 28px rgba(37,99,235,.20)
+    }
+    .cardBtn.primary:hover{opacity:.95}
+    .starBtn{padding:11px 14px;font-weight:900;display:inline-flex;align-items:center;gap:8px}
+    .cardFooter{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:2px;color:var(--muted);font-size:.84rem
+    }
+    .linkText{color:var(--muted);text-decoration:none}
+    .linkText:hover{color:var(--text)}
+    .drawerBackdrop{
+      position:fixed;inset:0;background:rgba(2,6,23,.48);backdrop-filter:blur(2px);
+      z-index:70;opacity:0;pointer-events:none;transition:opacity .18s ease;
+    }
+    .drawer{
+      position:fixed;top:0;right:-390px;z-index:80;width:min(360px,calc(100vw - 34px));height:100vh;padding:16px;
+      transition:right .22s ease;display:grid;grid-template-rows:auto auto 1fr auto;gap:14px
+    }
+    .drawer.open{right:0}
+    .drawerBackdrop.open{opacity:1;pointer-events:auto}
+    .drawerHead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .drawerHead h3{margin:0;font-size:1.05rem}
+    .drawerSection{
+      display:grid;gap:10px;padding:14px;border-radius:22px;background:linear-gradient(180deg,var(--card),var(--card2));
+      border:1px solid var(--border);box-shadow:var(--shadow-soft)
+    }
+    .drawerGrid{display:grid;gap:10px}
+    .drawerItem{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--border);
+      color:var(--text);text-decoration:none;font-weight:800
+    }
+    .drawerItem small{color:var(--muted);font-weight:700}
+    .themeGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .themeBtn{padding:12px 14px;font-weight:900;text-align:left}
+    .footerHint{color:var(--muted);font-size:.85rem;line-height:1.55}
+    .empty{
+      padding:30px;border-radius:26px;border:1px dashed var(--border);text-align:center;color:var(--muted)
+    }
+    .hidden{display:none !important}
+    .modalBackdrop{
+      position:fixed;inset:0;background:rgba(2,6,23,.55);z-index:90;opacity:0;pointer-events:none;transition:opacity .18s ease;
+    }
+    .modalBackdrop.open{opacity:1;pointer-events:auto}
+    .modal{
+      position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:18px;pointer-events:none;
+    }
+    .modalCard{
+      width:min(520px,100%);padding:18px;border-radius:28px;background:linear-gradient(180deg,var(--card),var(--card2));
+      border:1px solid var(--border);box-shadow:var(--shadow);transform:translateY(8px) scale(.98);opacity:0;transition:transform .18s ease, opacity .18s ease
+    }
+    .modal.open .modalCard{transform:translateY(0) scale(1);opacity:1}
+    .modalHead{display:flex;justify-content:space-between;align-items:start;gap:10px}
+    .modalHead h3{margin:0;font-size:1.2rem}
+    .modalHead p{margin:6px 0 0;color:var(--muted);line-height:1.55}
+    .ratingRow{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+    .ratingPick{
+      width:52px;height:52px;border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);
+      font-size:1.1rem;font-weight:900;cursor:pointer;
+    }
+    .ratingPick.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border-color:transparent}
+    .toast{
+      position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(18px);
+      background:rgba(15,23,42,.90);color:white;border:1px solid rgba(255,255,255,.12);
+      padding:12px 16px;border-radius:999px;opacity:0;pointer-events:none;z-index:120;transition:.2s ease;
+      box-shadow:var(--shadow-soft)
+    }
+    body.theme-light .toast{background:rgba(15,23,42,.92);color:#fff}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .topBar{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+      padding:0 2px;
+    }
+    .topBar .smallBtn{border-radius:16px}
+    .mobileNav{
+      display:none;
+    }
+    @media (max-width: 1100px){
+      .hero{grid-template-columns:1fr}
       .navCenter{display:none}
-      .nav{justify-content:space-between}
+      .heroStats{grid-template-columns:repeat(3,minmax(0,1fr))}
     }
-    @media (max-width:760px){
-      .app{padding:12px}
-      .nav{width:calc(100% - 16px);height:68px;padding:10px 12px;top:8px}
+    @media (max-width: 760px){
+      .shell{padding:12px}
+      .nav{width:calc(100% - 12px);height:auto;padding:10px;border-radius:24px}
       .brandText span{max-width:20ch}
-      .wrap{padding-top:calc(68px + 10px)}
-      .hero,.toolbar{border-radius:26px}
+      .wrap{padding-top:calc(var(--nav-h) + 24px)}
+      .heroLeft,.heroRight{padding:16px}
       .heroStats{grid-template-columns:1fr}
-      .toolbar{grid-template-columns:1fr}
-      .controls{justify-content:flex-start}
-      .count{justify-self:start}
+      .searchRow{grid-template-columns:1fr}
       .grid{grid-template-columns:1fr}
+      .sectionHead{align-items:start;flex-direction:column}
+      .drawer{width:100vw;max-width:100vw;border-radius:0}
+      .themeGrid{grid-template-columns:1fr}
+      .modalCard{border-radius:22px}
+      .cardActions,.cardFooter{flex-direction:column;align-items:flex-start}
+      .actionsLeft,.actionsRight{width:100%}
+      .actionsRight .cardBtn,.actionsRight .starBtn{flex:1}
     }
+    @media (prefers-reduced-motion: reduce){
+      *{scroll-behavior:auto;transition:none !important;animation:none !important}
+    }
+    svg{display:block}
   </style>
 </head>
-<body>
-  <canvas id="bgCanvas"></canvas>
-  <canvas id="fxCanvas"></canvas>
+<body class="theme-navy">
+  <div class="drawerBackdrop" id="drawerBackdrop"></div>
 
-  <header class="nav glass">
-    <div class="brand" id="logoButton" role="button" tabindex="0" aria-label="Go to top">
-      <div class="brandMark" aria-hidden="true">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 10-13h-6l0-7Z" stroke="white" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/></svg>
+  <aside class="drawer glass" id="drawer">
+    <div class="drawerHead">
+      <h3>Menu</h3>
+      <button class="iconBtn" id="closeDrawer" aria-label="Close drawer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="drawerSection">
+      <div class="drawerGrid">
+        <a class="drawerItem" href="#home"><span>Home</span><small>Default</small></a>
+        <a class="drawerItem" href="#most-downloaded"><span>Most Downloaded</span><small>Top 20</small></a>
+        <a class="drawerItem" href="#recent"><span>Recent</span><small>Newest</small></a>
+        <button class="drawerItem" id="bugBtn"><span>Report Bug</span><small>Website</small></button>
+        <button class="drawerItem" id="requestBtn"><span>Request</span><small>Website</small></button>
+        <button class="drawerItem" id="discordBtn"><span>Join Discord</span><small>Copy link</small></button>
+        <button class="drawerItem" id="updatesBtn"><span>Updates</span><small>Website</small></button>
       </div>
-      <div class="brandText">
-        <strong id="navTitle">MozLaunch</strong>
-        <span id="navSubtitle">by SkyeMoz</span>
+    </div>
+
+    <div class="drawerSection">
+      <strong>Theme</strong>
+      <div class="themeGrid">
+        <button class="themeBtn" data-theme="gray">Gray</button>
+        <button class="themeBtn" data-theme="navy">Blue Navy</button>
+        <button class="themeBtn" data-theme="yellow">Yellow</button>
+        <button class="themeBtn" data-theme="light">Light</button>
+        <button class="themeBtn" data-theme="dark">Dark Mode</button>
       </div>
     </div>
 
-    <nav class="navCenter" aria-label="Primary">
-      <a class="navLink active" href="#top" data-nav="top">Home</a>
-      <a class="navLink" href="#apps" data-nav="apps">Apps</a>
-      <a class="navLink" href="#games" data-nav="games">Games</a>
-      <a class="navLink" href="#all" data-nav="all">All Items</a>
-    </nav>
-
-    <div class="navRight">
-      <div class="statusPill" id="liveStatus"><span class="dot"></span><span>Connecting…</span></div>
+    <div class="drawerSection">
+      <div class="footerHint">
+        Firebase version uses live Firestore data. Ratings and downloads are shared across all users.
+      </div>
     </div>
-  </header>
+  </aside>
 
-  <main class="app" id="top">
-    <div class="wrap">
-      <section class="hero glass">
-        <div class="heroTop">
-          <div class="heroCopy">
-            <div class="heroBadgeRow">
-              <span class="badge">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l2.7 5.48L20.7 8.3l-4.35 4.24L17.37 19 12 16.18 6.63 19l1.02-6.46L3.3 8.3l6-0.82L12 2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-                🟢 Live Feed
-              </span>
-              <span class="badge">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 7.5l9 9M16.5 7.5l-9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-                Global / Realtime
-              </span>
-            </div>
-            <h1 id="heroTitle">MozLaunch</h1>
-            <p id="heroSubtitle">by SkyeMoz</p>
-          </div>
-
-          <div class="heroStats" aria-label="Dashboard stats">
-            <div class="statCard">
-              <div class="statIcon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 8.5h16M4 12h16M4 15.5h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-              <div><strong id="totalCount">0</strong><span>Total items</span></div>
-            </div>
-            <div class="statCard">
-              <div class="statIcon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7 7h10l-1 11H8L7 7Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 7a3 3 0 0 1 6 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
-              <div><strong id="gamesCount">0</strong><span>Game items</span></div>
-            </div>
-            <div class="statCard">
-              <div class="statIcon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 7.5h12v10H6v-10Z" stroke="currentColor" stroke-width="1.7"/><path d="M9 9h6M9 12h6M9 15h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
-              <div><strong id="appsCount">0</strong><span>App / File items</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="toolbar glass" id="all">
-        <div class="search">
-          <svg class="searchIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="rgba(226,232,240,.78)" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="rgba(226,232,240,.78)" stroke-width="2" stroke-linecap="round"/></svg>
-          <input id="searchInput" type="text" placeholder="Search titles, tags, sizes, or descriptions" autocomplete="off" />
-        </div>
-        <div class="controls" aria-label="Filters">
-          <button class="chip active" data-filter="All" type="button">All</button>
-          <button class="chip" data-filter="Games" type="button">Games</button>
-          <button class="chip" data-filter="Apps" type="button">Apps</button>
-          <button class="chip" data-filter="File" type="button">File</button>
-          <div class="count" id="countBadge">0 items</div>
-        </div>
-      </section>
-
-      <section id="apps" class="srOnly" aria-hidden="true"></section>
-      <section id="games" class="srOnly" aria-hidden="true"></section>
-      <section id="grid" class="grid" aria-live="polite"></section>
-      <div class="footer">Live synced from Firestore collection <code>global</code>. Every update appears without refresh.</div>
-    </div>
-  </main>
-
-  <div id="modal" class="overlay" aria-hidden="true" style="position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(2,6,23,.58);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:80;">
-    <div class="modalCard" style="width:min(560px,100%);border-radius:32px;border:1px solid rgba(148,163,184,.12);background:linear-gradient(180deg,rgba(12,23,41,.94),rgba(7,15,28,.92));box-shadow:0 30px 90px rgba(0,0,0,.42);padding:22px;animation:pop .22s ease both;">
-      <div class="modalTop" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;">
+  <div class="modalBackdrop" id="modalBackdrop"></div>
+  <div class="modal" id="ratingModal" aria-hidden="true">
+    <div class="modalCard">
+      <div class="modalHead">
         <div>
-          <h3 class="modalTitle" id="modalTitle" style="margin:0;font-size:1.14rem;line-height:1.2;letter-spacing:-.02em;">Launching</h3>
-          <p class="modalSub" id="modalSub" style="margin:6px 0 0;color:var(--muted);line-height:1.5;font-size:.95rem;">Preparing launch</p>
+          <h3 id="ratingTitle">Rate this app</h3>
+          <p>Pick a rating from 1 to 5 stars. It updates the shared average in Firestore.</p>
         </div>
-        <button class="close" id="closeModal" type="button" aria-label="Close" style="width:42px;height:42px;border-radius:14px;border:1px solid rgba(148,163,184,.12);background:rgba(255,255,255,.04);color:var(--text);font-size:20px;cursor:pointer;">×</button>
+        <button class="iconBtn" id="closeModal" aria-label="Close rating modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
       </div>
-      <div class="spinnerRow" style="display:flex;justify-content:center;padding:10px 0 2px;"><div class="spinner" aria-hidden="true" style="width:52px;height:52px;border-radius:50%;border:4px solid rgba(59,130,246,.12);border-top-color:rgba(59,130,246,.96);border-right-color:rgba(124,58,237,.92);animation:spin .9s linear infinite;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)"></div></div>
-      <div class="loaderWrap" style="display:grid;gap:12px;margin-top:12px;">
-        <div class="loaderLine" style="display:flex;justify-content:space-between;gap:12px;align-items:center;color:#d7e5fb;font-size:.92rem;font-weight:800;"><span id="stageLabel">Loading resources</span><span id="stagePct">0%</span></div>
-        <div class="bar" style="height:11px;border-radius:999px;overflow:hidden;border:1px solid rgba(148,163,184,.12);background:rgba(255,255,255,.04)"><span id="modalBar" style="display:block;height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--accent3),var(--accent2));transition:width 120ms linear"></span></div>
-        <p class="stageText" style="margin:0;color:var(--muted);font-size:.92rem;line-height:1.5;">Opening item and preparing the direct link.</p>
+      <div class="ratingRow" id="ratingRow"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+        <button class="smallBtn" id="cancelRating">Cancel</button>
+        <button class="btn" id="submitRating">Submit rating</button>
       </div>
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  <div class="toast" id="toast">Saved</div>
 
+  <main class="shell">
+    <header class="nav glass">
+      <button class="brand" id="openHome">
+        <div class="brandMark">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M12 2l7 4v8c0 5-3.5 7.7-7 8-3.5-.3-7-3-7-8V6l7-4Z"/>
+            <path d="M8 12l2.5 2.5L16 9"/>
+          </svg>
+        </div>
+        <div class="brandText">
+          <strong>MozLaunch</strong>
+          <span>Firebase app launcher with live stats</span>
+        </div>
+      </button>
+
+      <nav class="navCenter">
+        <a class="navLink active" href="#home" data-sort="home">Home</a>
+        <a class="navLink" href="#most-downloaded" data-sort="downloads">Most Downloaded</a>
+        <a class="navLink" href="#recent" data-sort="recent">Recent</a>
+      </nav>
+
+      <div class="navRight">
+        <button class="iconBtn" id="refreshBtn" aria-label="Refresh apps">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 1 1-3-6.7"/>
+            <path d="M21 3v6h-6"/>
+          </svg>
+        </button>
+        <button class="drawerBtn" id="openDrawer" aria-label="Open drawer">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="heroLeft glass" id="home">
+        <div class="heroTitle">
+          <h1>Card launcher, but actually useful.</h1>
+          <p>
+            Search apps, sort by downloads or newest, rate with stars, and keep live counters synced with Firebase Firestore.
+            Upload cards as wide banners, show how long ago they were added, and expand long descriptions with one tap.
+          </p>
+        </div>
+
+        <div class="searchRow">
+          <input id="searchInput" class="search" type="search" placeholder="Search by title, description, or tag..." />
+          <button class="smallBtn" id="clearSearch">Clear</button>
+          <button class="smallBtn" id="seedDemo">Load demo cards</button>
+        </div>
+
+        <div class="heroStats">
+          <div class="stat">
+            <strong id="statTotalApps">0</strong>
+            <span>Total cards loaded</span>
+          </div>
+          <div class="stat">
+            <strong id="statTotalDownloads">0</strong>
+            <span>Total downloads</span>
+          </div>
+          <div class="stat">
+            <strong id="statAvgRating">0.0</strong>
+            <span>Average rating</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="heroRight glass">
+        <div class="notice">
+          <div>
+            <strong>Firebase ready</strong>
+            <span>Firestore keeps ratings and downloads shared across every device.</span>
+          </div>
+          <button class="btn" id="copyTutorialBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copy setup notes
+          </button>
+        </div>
+
+        <div class="drawerSection">
+          <strong>What this version includes</strong>
+          <div class="footerHint">
+            A hamburger drawer, theme switching, mobile-friendly cards, banner previews, relative upload times,
+            expandable descriptions, search, top 20 sorting, and live Firestore stats.
+          </div>
+        </div>
+
+        <div class="drawerSection">
+          <strong>Firestore fields used</strong>
+          <div class="footerHint" style="font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;">
+            title, description, banner, appUrl, downloads, ratingTotal, ratingCount, createdAt, tags, bugUrl, requestUrl, updatesUrl, discordUrl
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="topBar">
+      <div class="sectionHead">
+        <div>
+          <h2 id="sectionTitle">Home</h2>
+          <p id="sectionSub">Default cards, newest first.</p>
+        </div>
+      </div>
+      <div class="sortRow">
+        <button class="chip active" data-mode="home">Home</button>
+        <button class="chip" data-mode="downloads">Most Downloaded</button>
+        <button class="chip" data-mode="recent">Recent</button>
+      </div>
+    </section>
+
+    <section class="grid" id="cards"></section>
+
+    <section class="empty hidden" id="emptyState">
+      No cards matched your search.
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      doc,
+      getDocs,
+      onSnapshot,
+      runTransaction,
+      setDoc,
+      serverTimestamp,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+    // =============================
+    // 1) Firebase config
+    // =============================
+    // Replace these values with your Firebase web app config.
     const firebaseConfig = {
-      apiKey: "AIzaSyCbtNoRho0NAydgqEz0iKXotqBXJpmubZk",
-      authDomain: "modlaunch.firebaseapp.com",
-      projectId: "modlaunch",
-      storageBucket: "modlaunch.firebasestorage.app",
-      messagingSenderId: "16749876586",
-      appId: "1:16749876586:web:6e6afba261424858f40113"
+      apiKey: "PASTE_YOUR_API_KEY",
+      authDomain: "PASTE_YOUR_AUTH_DOMAIN",
+      projectId: "PASTE_YOUR_PROJECT_ID",
+      storageBucket: "PASTE_YOUR_STORAGE_BUCKET",
+      messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID",
+      appId: "PASTE_YOUR_APP_ID"
     };
 
-    const fallbackManifest = { appName: "MozLaunch", subtitle: "by SkyeMoz", items: [] };
-    const state = { manifest: fallbackManifest, filter: "All", query: "" };
+    const APP_COLLECTION = "apps";
 
-    const grid = document.getElementById("grid");
-    const searchInput = document.getElementById("searchInput");
-    const countBadge = document.getElementById("countBadge");
-    const totalCount = document.getElementById("totalCount");
-    const gamesCount = document.getElementById("gamesCount");
-    const appsCount = document.getElementById("appsCount");
-    const heroTitle = document.getElementById("heroTitle");
-    const heroSubtitle = document.getElementById("heroSubtitle");
-    const navTitle = document.getElementById("navTitle");
-    const navSubtitle = document.getElementById("navSubtitle");
-    const chips = [...document.querySelectorAll(".chip")];
-    const navLinks = [...document.querySelectorAll(".navLink")];
-    const logoButton = document.getElementById("logoButton");
-    const modal = document.getElementById("modal");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalSub = document.getElementById("modalSub");
-    const stageLabel = document.getElementById("stageLabel");
-    const stagePct = document.getElementById("stagePct");
-    const modalBar = document.getElementById("modalBar");
-    const closeModal = document.getElementById("closeModal");
-    const liveStatus = document.getElementById("liveStatus");
-    let activeLaunch = null, rafId = 0, backgroundSeed = Math.random();
+    // Global links used by the drawer
+    const GLOBAL_LINKS = {
+      bugUrl: "https://example.com/bug",
+      requestUrl: "https://example.com/request",
+      updatesUrl: "https://example.com/updates",
+      discordUrl: "https://discord.gg/your-invite"
+    };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const colRef = collection(db, "global");
+    // Demo cards shown if Firestore is empty or config is not ready
+    const demoApps = [
+      {
+        id: "demo-1",
+        title: "Speed Tools",
+        description: "A fast utility pack with quick actions, presets, and an all-in-one command layout. Great for showing how your launcher cards look with banner previews and expandable text.",
+        banner: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+        appUrl: "https://example.com",
+        tags: ["utility", "fast"],
+        downloads: 142,
+        ratingTotal: 410,
+        ratingCount: 92,
+        createdAt: Date.now() - 1000 * 60 * 60 * 36
+      },
+      {
+        id: "demo-2",
+        title: "Night Panel",
+        description: "Clean dark dashboard built to show newest cards first, with easy sorting, rating, and download stats synced across users.",
+        banner: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=1200&q=80",
+        appUrl: "https://example.com",
+        tags: ["dashboard", "dark"],
+        downloads: 236,
+        ratingTotal: 870,
+        ratingCount: 182,
+        createdAt: Date.now() - 1000 * 60 * 60 * 9
+      },
+      {
+        id: "demo-3",
+        title: "Glass Widget",
+        description: "A banner-style layout with soft glassmorphism, compact mobile spacing, and a long description expander for cards that need more room.",
+        banner: "https://images.unsplash.com/photo-1522252234503-e356532cafd5?auto=format&fit=crop&w=1200&q=80",
+        appUrl: "https://example.com",
+        tags: ["glass", "ui"],
+        downloads: 64,
+        ratingTotal: 232,
+        ratingCount: 51,
+        createdAt: Date.now() - 1000 * 60 * 12
+      }
+    ];
 
-    function esc(v){ return String(v ?? "").replace(/[&<>"]/g, s => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[s])); }
-    function fmtDate(v){
-      try {
-        if(!v) return "";
-        if(typeof v === "string") return new Intl.DateTimeFormat(undefined, { year:"numeric", month:"short", day:"numeric" }).format(new Date(v));
-        if(v?.toDate) return new Intl.DateTimeFormat(undefined, { year:"numeric", month:"short", day:"numeric" }).format(v.toDate());
-        if(v?.seconds) return new Intl.DateTimeFormat(undefined, { year:"numeric", month:"short", day:"numeric" }).format(new Date(v.seconds * 1000));
-        return new Intl.DateTimeFormat(undefined, { year:"numeric", month:"short", day:"numeric" }).format(new Date(v));
-      } catch { return esc(v); }
+    // =============================
+    // 2) State
+    // =============================
+    const state = {
+      mode: "home",
+      search: "",
+      apps: [],
+      selectedApp: null,
+      selectedRating: 5,
+      liveUnsub: null,
+      hydrated: false
+    };
+
+    // =============================
+    // 3) Elements
+    // =============================
+    const els = {
+      cards: document.getElementById("cards"),
+      emptyState: document.getElementById("emptyState"),
+      searchInput: document.getElementById("searchInput"),
+      clearSearch: document.getElementById("clearSearch"),
+      seedDemo: document.getElementById("seedDemo"),
+      refreshBtn: document.getElementById("refreshBtn"),
+      statTotalApps: document.getElementById("statTotalApps"),
+      statTotalDownloads: document.getElementById("statTotalDownloads"),
+      statAvgRating: document.getElementById("statAvgRating"),
+      sectionTitle: document.getElementById("sectionTitle"),
+      sectionSub: document.getElementById("sectionSub"),
+      drawer: document.getElementById("drawer"),
+      drawerBackdrop: document.getElementById("drawerBackdrop"),
+      openDrawer: document.getElementById("openDrawer"),
+      closeDrawer: document.getElementById("closeDrawer"),
+      bugBtn: document.getElementById("bugBtn"),
+      requestBtn: document.getElementById("requestBtn"),
+      discordBtn: document.getElementById("discordBtn"),
+      updatesBtn: document.getElementById("updatesBtn"),
+      ratingModal: document.getElementById("ratingModal"),
+      modalBackdrop: document.getElementById("modalBackdrop"),
+      closeModal: document.getElementById("closeModal"),
+      cancelRating: document.getElementById("cancelRating"),
+      submitRating: document.getElementById("submitRating"),
+      ratingTitle: document.getElementById("ratingTitle"),
+      ratingRow: document.getElementById("ratingRow"),
+      copyTutorialBtn: document.getElementById("copyTutorialBtn"),
+      openHome: document.getElementById("openHome"),
+      toast: document.getElementById("toast")
+    };
+
+    // =============================
+    // 4) Helpers
+    // =============================
+    function nowMs(){ return Date.now(); }
+
+    function toast(msg){
+      els.toast.textContent = msg;
+      els.toast.classList.add("show");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => els.toast.classList.remove("show"), 1800);
     }
 
-    function iconSvg(n){
-      const i = {
-        note:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3.5h7l3.5 3.5V20a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 20V5A1.5 1.5 0 0 1 7 3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3.5V7h3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 11h8M8 14h8M8 17h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
-        gamepad:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10h10a4 4 0 0 1 4 4v.5A3.5 3.5 0 0 1 17.5 18H6.5A3.5 3.5 0 0 1 3 14.5V14a4 4 0 0 1 4-4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.5 13.2h3M10 11.7v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M16.2 12.6h.01M18 14h.01" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>`,
-        spark:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l1.78 5.45L19.5 10.2l-4.18 3.04L16.96 19 12 15.8 7.04 19l1.64-5.76L4.5 10.2l5.72-1.75L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`,
-        car:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.3 10.2 7.7 7.4A2 2 0 0 1 9.48 6.3h5.04a2 2 0 0 1 1.78 1.1l1.4 2.8M5 14h14v3a1 1 0 0 1-1 1h-.7a1.3 1.3 0 0 1-1.3-1.3V16H8v.7A1.3 1.3 0 0 1 6.7 18H6a1 1 0 0 1-1-1v-3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M7 14.2h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8.5" cy="15.9" r="1" stroke="currentColor" stroke-width="1.5"/><circle cx="15.5" cy="15.9" r="1" stroke="currentColor" stroke-width="1.5"/></svg>`,
-        tools:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14.5 4.5a4.5 4.5 0 0 0-4.08 6.4L4.6 16.7a1.8 1.8 0 1 0 2.55 2.55l5.8-5.82a4.5 4.5 0 1 0 1.55-8.93Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M15.3 7.2l1.5 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`,
-        moon:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15.5 3.5a7.5 7.5 0 1 0 5 13.1 8 8 0 1 1-5-13.1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`
-      };
-      return i[n] || i.spark;
+    function escapeHtml(str = ""){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
     }
 
-    function appPreview(item){ return item.thumbnail ? `<img src="${esc(item.thumbnail)}" alt="${esc(item.title)} thumbnail" loading="lazy" />` : `<div class="appIconFallback">${iconSvg(item.icon)}</div>`; }
-    function normalize(item){ return [item.title,item.description,item.type,item.tag,item.size,item.date,item.icon,item.launch].join(" ").toLowerCase(); }
-
-    function isTimestampLike(v){ return v && typeof v === "object" && (typeof v.seconds === "number" || typeof v.toDate === "function"); }
-    function sortKey(item){
-      if(item.createdAt && isTimestampLike(item.createdAt)) return item.createdAt.seconds || item.createdAt.toDate?.().getTime?.() || 0;
-      if(item.date){ const t = Date.parse(item.date); if(!Number.isNaN(t)) return t; }
+    function toMs(value){
+      if (!value) return 0;
+      if (typeof value === "number") return value;
+      if (typeof value?.toMillis === "function") return value.toMillis();
+      if (typeof value?.seconds === "number") return value.seconds * 1000;
+      if (typeof value === "string") {
+        const parsed = Date.parse(value);
+        return Number.isNaN(parsed) ? 0 : parsed;
+      }
       return 0;
     }
 
-    function filteredItems(){
-      const q = state.query.trim().toLowerCase();
-      return (state.manifest?.items || []).filter(item => {
-        const typeOk = state.filter === "All" || item.type === state.filter;
-        const queryOk = !q || normalize(item).includes(q);
-        return typeOk && queryOk;
-      });
+    function timeAgo(input){
+      const ms = toMs(input);
+      if (!ms) return "just now";
+      const diff = Math.max(0, nowMs() - ms);
+      const sec = Math.floor(diff / 1000);
+      const min = Math.floor(sec / 60);
+      const hr = Math.floor(min / 60);
+      const day = Math.floor(hr / 24);
+      const wk = Math.floor(day / 7);
+      const mo = Math.floor(day / 30);
+      const yr = Math.floor(day / 365);
+      if (yr) return `${yr}y ago`;
+      if (mo) return `${mo}mo ago`;
+      if (wk) return `${wk}w ago`;
+      if (day) return `${day}d ago`;
+      if (hr) return `${hr}h ago`;
+      if (min) return `${min}m ago`;
+      return `${sec}s ago`;
     }
 
-    function updateStats(items){
-      const total = state.manifest?.items?.length || 0;
-      const games = (state.manifest?.items || []).filter(i => i.type === "Games").length;
-      const apps = (state.manifest?.items || []).filter(i => i.type !== "Games").length;
-      totalCount.textContent = total;
-      gamesCount.textContent = games;
-      appsCount.textContent = apps;
-      countBadge.textContent = `${items.length} item${items.length === 1 ? "" : "s"}`;
+    function avgRating(app){
+      const total = Number(app.ratingTotal || 0);
+      const count = Number(app.ratingCount || 0);
+      return count ? (total / count) : 0;
+    }
+
+    function formatCount(n){
+      return Number(n || 0).toLocaleString();
+    }
+
+    function getTheme(){
+      return localStorage.getItem("moz_theme") || "navy";
+    }
+
+    function setTheme(theme){
+      document.body.className = `theme-${theme}`;
+      localStorage.setItem("moz_theme", theme);
+      document.querySelectorAll(".themeBtn").forEach(btn => btn.classList.toggle("active", btn.dataset.theme === theme));
+      const themeColor = {
+        gray: "#64748b",
+        navy: "#0f172a",
+        yellow: "#f59e0b",
+        light: "#f8fafc",
+        dark: "#030712"
+      }[theme] || "#0f172a";
+      document.querySelector('meta[name="theme-color"]').setAttribute("content", themeColor);
+    }
+
+    function openDrawer(){
+      els.drawer.classList.add("open");
+      els.drawerBackdrop.classList.add("open");
+    }
+    function closeDrawer(){
+      els.drawer.classList.remove("open");
+      els.drawerBackdrop.classList.remove("open");
+    }
+    function openModal(){
+      els.ratingModal.classList.add("open");
+      els.modalBackdrop.classList.add("open");
+      els.ratingModal.setAttribute("aria-hidden", "false");
+    }
+    function closeModal(){
+      els.ratingModal.classList.remove("open");
+      els.modalBackdrop.classList.remove("open");
+      els.ratingModal.setAttribute("aria-hidden", "true");
+    }
+
+    function setMode(mode){
+      state.mode = mode;
+      document.querySelectorAll('[data-mode]').forEach(btn => btn.classList.toggle("active", btn.dataset.mode === mode));
+      document.querySelectorAll('[data-sort]').forEach(btn => btn.classList.toggle("active", btn.dataset.sort === mode));
+      const info = {
+        home: ["Home", "Default cards, newest first."],
+        downloads: ["Most Downloaded", "Top 20 cards by download count."],
+        recent: ["Recent", "Newest cards first."]
+      }[mode] || ["Home", "Default cards, newest first."];
+      els.sectionTitle.textContent = info[0];
+      els.sectionSub.textContent = info[1];
+      render();
+    }
+
+    function matchesSearch(app){
+      const q = state.search.trim().toLowerCase();
+      if (!q) return true;
+      const blob = [
+        app.title,
+        app.description,
+        Array.isArray(app.tags) ? app.tags.join(" ") : "",
+        app.appUrl,
+      ].join(" ").toLowerCase();
+      return blob.includes(q);
+    }
+
+    function sortedApps(){
+      let arr = [...state.apps].filter(matchesSearch);
+      if (state.mode === "downloads") {
+        arr.sort((a,b) => (Number(b.downloads||0) - Number(a.downloads||0)) || (toMs(b.createdAt) - toMs(a.createdAt)));
+        return arr.slice(0,20);
+      }
+      if (state.mode === "recent") {
+        arr.sort((a,b) => toMs(b.createdAt) - toMs(a.createdAt));
+        return arr;
+      }
+      // Home: newest first
+      arr.sort((a,b) => toMs(b.createdAt) - toMs(a.createdAt));
+      return arr;
+    }
+
+    function updateStats(){
+      const totalApps = state.apps.length;
+      const totalDownloads = state.apps.reduce((sum, a) => sum + Number(a.downloads || 0), 0);
+      const totalRatingCount = state.apps.reduce((sum, a) => sum + Number(a.ratingCount || 0), 0);
+      const totalRatingScore = state.apps.reduce((sum, a) => sum + Number(a.ratingTotal || 0), 0);
+      els.statTotalApps.textContent = formatCount(totalApps);
+      els.statTotalDownloads.textContent = formatCount(totalDownloads);
+      els.statAvgRating.textContent = totalRatingCount ? (totalRatingScore / totalRatingCount).toFixed(1) : "0.0";
+    }
+
+    function iconStar(){ return `★`; }
+    function iconDown(){ return `↓`; }
+    function iconPlay(){ return `▶`; }
+    function iconDownload(){ return `⤓`; }
+    function iconClock(){ return `⏱`; }
+    function iconTag(){ return `#`; }
+
+    function cardMarkup(app){
+      const avg = avgRating(app);
+      const stars = avg ? avg.toFixed(1) : "0.0";
+      const desc = String(app.description || "");
+      const long = desc.length > 160;
+      const expanded = Boolean(app._expanded);
+      const showDesc = expanded ? desc : desc.slice(0, 160);
+      const safeTitle = escapeHtml(app.title || "Untitled");
+      const safeDesc = escapeHtml(showDesc);
+      const banner = app.banner || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80";
+      const tags = Array.isArray(app.tags) ? app.tags.slice(0, 3) : [];
+      const created = timeAgo(app.createdAt);
+
+      return `
+        <article class="card">
+          <div class="banner">
+            <img src="${escapeHtml(banner)}" alt="${safeTitle}">
+            <div class="bannerOverlay"></div>
+            <div class="cardTop">
+              <span class="badge">${iconClock()} ${escapeHtml(created)}</span>
+              <span class="badge">${iconStar()} ${stars}</span>
+            </div>
+          </div>
+
+          <div class="cardBody">
+            <div class="cardTitle">
+              <h3>${safeTitle}</h3>
+              <button class="starBtn" data-action="rate" data-id="${escapeHtml(app.id)}">
+                ⭐ Rate
+              </button>
+            </div>
+
+            <div class="cardMeta">
+              <span class="pill">${iconDownload()} ${formatCount(app.downloads || 0)}</span>
+              <span class="pill">${iconStar()} ${stars} (${formatCount(app.ratingCount || 0)})</span>
+              ${tags.map(tag => `<span class="pill">${iconTag()} ${escapeHtml(tag)}</span>`).join("")}
+            </div>
+
+            <div class="desc ${expanded ? "" : "clamped"}">${safeDesc}${long && !expanded ? "..." : ""}</div>
+
+            ${long ? `<button class="smallBtn" data-action="toggle" data-id="${escapeHtml(app.id)}">${expanded ? "↑" : "↓"} ${expanded ? "Show less" : "Show full description"}</button>` : ""}
+
+            <div class="cardActions">
+              <div class="actionsLeft">
+                <button class="cardBtn primary" data-action="open" data-id="${escapeHtml(app.id)}">${iconPlay()} Open</button>
+                <button class="cardBtn" data-action="download" data-id="${escapeHtml(app.id)}">${iconDownload()} Download</button>
+              </div>
+              <div class="actionsRight">
+                <a class="cardBtn" href="${escapeHtml(app.appUrl || "#")}" target="_blank" rel="noopener noreferrer">Open link</a>
+              </div>
+            </div>
+
+            <div class="cardFooter">
+              <span>Uploaded ${escapeHtml(created)}</span>
+              <span>${escapeHtml(app.id || "")}</span>
+            </div>
+          </div>
+        </article>
+      `;
     }
 
     function render(){
-      const items = filteredItems();
-      updateStats(items);
-      grid.innerHTML = "";
-      if(!items.length){
-        grid.innerHTML = `<div class="empty">No matching items found. Add uploads in the uploader panel and they will appear here live.</div>`;
+      const apps = sortedApps();
+      els.cards.innerHTML = apps.map(cardMarkup).join("");
+      els.emptyState.classList.toggle("hidden", apps.length !== 0);
+      updateStats();
+      if (!apps.length) {
+        els.cards.innerHTML = "";
+      }
+    }
+
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        toast("Copied to clipboard");
+      }catch{
+        toast("Copy failed");
+      }
+    }
+
+    async function openUrl(url){
+      if (!url) return toast("No link set");
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    async function incrementDownloads(appId){
+      if (!db) {
+        toast("Firebase is not configured");
         return;
       }
-      items.forEach((item, index) => {
-        const card = document.createElement("article");
-        card.className = "card";
-        card.style.animationDelay = `${index * 55}ms`;
-        card.innerHTML = `
-          <div class="cardGlow"></div>
-          <div class="cardTop">
-            <div class="appInfo">
-              <div class="appThumb" aria-hidden="true">${appPreview(item)}</div>
-              <div class="appText">
-                <div class="titleRow">
-                  <h2>${esc(item.title)}</h2>
-                  <span class="tag">${esc(item.tag || item.type || "Item")}</span>
-                </div>
-                <p class="desc">${esc(item.description || "")}</p>
-              </div>
-            </div>
-          </div>
-          <div class="meta">
-            <span class="metaItem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M7 3.5v2M17 3.5v2M5 8.5h14M6.5 6.5h11A1.5 1.5 0 0 1 19 8v10.5A1.5 1.5 0 0 1 17.5 20h-11A1.5 1.5 0 0 1 5 18.5V8A1.5 1.5 0 0 1 6.5 6.5Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>${fmtDate(item.date)}</span>
-            <span class="metaItem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 12h12M6 8h7M6 16h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>${esc(item.size || "")}</span>
-            <span class="metaItem">${esc(item.type || "Item")}</span>
-          </div>
-          <div class="progress" aria-hidden="true">
-            <div class="progressTop"><span class="pStage">Ready</span><span class="pPct">0%</span></div>
-            <div class="bar"><span></span></div>
-          </div>
-          <div class="actions"><button class="launchBtn" type="button">Launch</button></div>
-        `;
-        const btn = card.querySelector(".launchBtn");
-        const progress = card.querySelector(".progress");
-        const pStage = card.querySelector(".pStage");
-        const pPct = card.querySelector(".pPct");
-        const bar = card.querySelector(".bar > span");
-        const stages = ["Loading package","Optimizing assets","Building session","Opening link"];
-        btn.addEventListener("click", () => startLaunch({
-          title: esc(item.title), sub: esc(item.description),
-          progress, pStage, pPct, bar, button: btn, stages, link: item.launch
-        }));
-        grid.appendChild(card);
+      const ref = doc(db, APP_COLLECTION, appId);
+      await runTransaction(db, async (tx) => {
+        const snap = await tx.get(ref);
+        if (!snap.exists()) return;
+        const data = snap.data();
+        tx.update(ref, { downloads: Number(data.downloads || 0) + 1 });
       });
     }
 
-    function setFilter(filter){
-      state.filter = filter;
-      chips.forEach(c => c.classList.toggle("active", c.dataset.filter === filter));
-      render();
-      highlightNav(filter === "All" ? "all" : filter.toLowerCase());
-    }
-    chips.forEach(chip => chip.addEventListener("click", () => setFilter(chip.dataset.filter)));
-    searchInput.addEventListener("input", () => { state.query = searchInput.value; render(); });
-
-    function openModal(title, sub){
-      modalTitle.textContent = title || "Launching";
-      modalSub.textContent = sub || "Preparing launch";
-      modal.style.display = "grid";
-      modal.setAttribute("aria-hidden","false");
-    }
-    function closeLaunchModal(){ modal.style.display = "none"; modal.setAttribute("aria-hidden","true"); }
-    closeModal.addEventListener("click", () => { if(activeLaunch?.button) activeLaunch.button.disabled = false; activeLaunch = null; closeLaunchModal(); });
-    modal.addEventListener("click", e => { if(e.target === modal){ if(activeLaunch?.button) activeLaunch.button.disabled = false; activeLaunch = null; closeLaunchModal(); } });
-
-    logoButton.addEventListener("click", () => { window.scrollTo({ top: 0, behavior: "smooth" }); highlightNav("top"); });
-    logoButton.addEventListener("keydown", e => {
-      if(e.key === "Enter" || e.key === " "){
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        highlightNav("top");
-      }
-    });
-
-    function goToLink(link){
-      const safeLink = String(link || "").trim();
-      if(!safeLink || safeLink === "#") return;
-      if(safeLink.startsWith("#")){
-        const el = document.querySelector(safeLink);
-        if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-        history.replaceState(null, "", safeLink);
+    async function submitRatingForApp(appId, rating){
+      if (!db) {
+        toast("Firebase is not configured");
         return;
       }
-      if(safeLink.startsWith("./") || safeLink.startsWith("../") || safeLink.startsWith("/")){
-        window.location.href = safeLink;
+      const key = `moz_rated_${appId}`;
+      if (localStorage.getItem(key)) {
+        toast("You already rated this app on this device");
         return;
       }
-      try { window.location.href = new URL(safeLink, window.location.href).href; }
-      catch { window.location.href = safeLink; }
-    }
-
-    function startLaunch(ctx){
-      if(activeLaunch) return;
-      activeLaunch = ctx;
-      ctx.button.disabled = true;
-      ctx.progress.classList.add("active");
-      ctx.progress.setAttribute("aria-hidden","false");
-      openModal(ctx.title, ctx.sub);
-
-      const duration = 1100 + Math.floor(Math.random() * 900);
-      const start = performance.now();
-      const totalStages = ctx.stages.length;
-      cancelAnimationFrame(rafId);
-
-      const tick = () => {
-        const elapsed = performance.now() - start;
-        const progress = Math.min(100, Math.round((elapsed / duration) * 100));
-        const stageIndex = Math.min(totalStages - 1, Math.floor(progress / (100 / totalStages)));
-        ctx.bar.style.width = `${progress}%`;
-        ctx.pPct.textContent = `${progress}%`;
-        ctx.pStage.textContent = ctx.stages[stageIndex];
-        stageLabel.textContent = ctx.stages[stageIndex];
-        stagePct.textContent = `${progress}%`;
-        modalBar.style.width = `${progress}%`;
-
-        if(progress < 100){
-          rafId = requestAnimationFrame(tick);
-          return;
-        }
-
-        ctx.pStage.textContent = "Opening";
-        stageLabel.textContent = "Opening";
-        stagePct.textContent = "100%";
-        setTimeout(() => {
-          ctx.progress.classList.remove("active");
-          ctx.progress.setAttribute("aria-hidden","true");
-          ctx.bar.style.width = "0%";
-          ctx.pPct.textContent = "0%";
-          ctx.pStage.textContent = "Ready";
-          modalBar.style.width = "0%";
-          ctx.button.disabled = false;
-          activeLaunch = null;
-          closeLaunchModal();
-          goToLink(ctx.link);
-        }, 180);
-      };
-      rafId = requestAnimationFrame(tick);
-    }
-
-    function highlightNav(target){ navLinks.forEach(link => link.classList.toggle("active", link.dataset.nav === target)); }
-    navLinks.forEach(link => {
-      link.addEventListener("click", e => {
-        const target = link.getAttribute("href");
-        if(!target || !target.startsWith("#")) return;
-        const el = document.querySelector(target);
-        if(el){
-          e.preventDefault();
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-          history.replaceState(null, "", target);
-          highlightNav(link.dataset.nav);
-        }
-      });
-    });
-
-    function setLiveStatus(text, live=true){
-      liveStatus.innerHTML = `<span class="dot" style="background:${live ? '#22c55e' : '#f59e0b'};box-shadow:0 0 0 5px ${live ? 'rgba(34,197,94,.14)' : 'rgba(245,158,11,.14)'}"></span><span>${esc(text)}</span>`;
-    }
-
-    function loadFirestore(){
-      setLiveStatus("Connecting…", true);
-      onSnapshot(colRef, (snap) => {
-        const items = snap.docs.map(docSnap => {
-          const d = docSnap.data() || {};
-          return {
-            id: docSnap.id,
-            title: d.title || "just.",
-            description: d.description || "",
-            type: d.type || "Apps",
-            tag: d.tag || "",
-            size: d.size || "",
-            date: d.date || d.createdAt || "",
-            icon: d.icon || "spark",
-            thumbnail: d.thumbnail || "",
-            launch: d.launch || "",
-            createdAt: d.createdAt || null,
-            updatedAt: d.updatedAt || null
-          };
+      const ref = doc(db, APP_COLLECTION, appId);
+      await runTransaction(db, async (tx) => {
+        const snap = await tx.get(ref);
+        if (!snap.exists()) return;
+        const data = snap.data();
+        tx.update(ref, {
+          ratingTotal: Number(data.ratingTotal || 0) + rating,
+          ratingCount: Number(data.ratingCount || 0) + 1
         });
+      });
+      localStorage.setItem(key, String(rating));
+      toast(`Rated ${rating}/5`);
+      closeModal();
+    }
 
-        items.sort((a,b) => sortKey(b) - sortKey(a));
-        state.manifest = { appName: "MozLaunch", subtitle: "by SkyeMoz", items };
-        heroTitle.textContent = "MozLaunch";
-        heroSubtitle.textContent = "by SkyeMoz";
-        navTitle.textContent = "MozLaunch";
-        navSubtitle.textContent = "by SkyeMoz";
-        setLiveStatus(`Live • ${items.length} docs`, true);
+    function setSelectedRating(value){
+      state.selectedRating = value;
+      document.querySelectorAll(".ratingPick").forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.rating) === Number(value));
+      });
+    }
+
+    function openRatingModal(app){
+      state.selectedApp = app;
+      state.selectedRating = 5;
+      els.ratingTitle.textContent = `Rate "${app.title || "this app"}"`;
+      els.ratingRow.innerHTML = Array.from({length:5}, (_, i) => {
+        const n = i + 1;
+        return `<button class="ratingPick ${n===5 ? "active":""}" data-rating="${n}">${n}</button>`;
+      }).join("");
+      openModal();
+    }
+
+    function ensureDemoStorage(){
+      // Keep sample cards in memory only; no Firestore writes here.
+      state.apps = demoApps.map(a => ({...a}));
+      render();
+      toast("Loaded demo cards");
+    }
+
+    function hydrateFromSnapshot(snapshotDocs){
+      state.apps = snapshotDocs.map(d => ({ id: d.id, ...d.data() }));
+      state.hydrated = true;
+      render();
+    }
+
+    function setupLiveListener(){
+      if (!db) {
+        state.apps = demoApps.map(a => ({...a}));
         render();
+        toast("Firebase config missing — showing demo cards");
+        return;
+      }
+      if (state.liveUnsub) state.liveUnsub();
+      const q = query(collection(db, APP_COLLECTION), orderBy("createdAt", "desc"));
+      state.liveUnsub = onSnapshot(q, (snap) => {
+        const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (docs.length) {
+          hydrateFromSnapshot(snap.docs);
+        } else {
+          state.apps = demoApps.map(a => ({...a}));
+          render();
+        }
       }, (err) => {
         console.error(err);
-        setLiveStatus("Firestore error", false);
-        grid.innerHTML = `<div class="empty">Live feed could not connect. Check Firestore rules and Firebase config.</div>`;
+        state.apps = demoApps.map(a => ({...a}));
+        render();
+        toast("Firestore error — demo cards shown");
       });
     }
 
-    function initBackground(){
-      const bg = document.getElementById("bgCanvas"), fx = document.getElementById("fxCanvas");
-      const bctx = bg.getContext("2d"), fctx = fx.getContext("2d");
-      let w = 0, h = 0, t = 0;
-      const bubbles = Array.from({ length: 56 }, () => ({ x: Math.random(), y: Math.random(), r:.9 + Math.random() * 2, a:.08 + Math.random() * .18, vx:(Math.random()-.5)*.00024, vy:(Math.random()-.5)*.00024 }));
-      const particles = Array.from({ length: 72 }, () => ({ x: Math.random(), y: Math.random(), vx:(Math.random()-.5)*.00072, vy:(Math.random()-.5)*.00072, r:1 + Math.random()*2.1 }));
-
-      function resize(){
-        w = bg.width = fx.width = Math.floor(window.innerWidth * devicePixelRatio);
-        h = bg.height = fx.height = Math.floor(window.innerHeight * devicePixelRatio);
-        bg.style.width = fx.style.width = window.innerWidth + "px";
-        bg.style.height = fx.style.height = window.innerHeight + "px";
+    async function seedDemoToFirestore(){
+      if (!db) return ensureDemoStorage();
+      const existing = await getDocs(collection(db, APP_COLLECTION));
+      if (!existing.empty) {
+        toast("Firestore already has cards");
+        return;
       }
-      window.addEventListener("resize", resize, { passive:true });
-      resize();
+      const writes = demoApps.map(async app => {
+        const ref = doc(db, APP_COLLECTION, app.id);
+        await setDoc(ref, {
+          title: app.title,
+          description: app.description,
+          banner: app.banner,
+          appUrl: app.appUrl,
+          tags: app.tags || [],
+          downloads: app.downloads || 0,
+          ratingTotal: app.ratingTotal || 0,
+          ratingCount: app.ratingCount || 0,
+          createdAt: serverTimestamp(),
+          bugUrl: GLOBAL_LINKS.bugUrl,
+          requestUrl: GLOBAL_LINKS.requestUrl,
+          updatesUrl: GLOBAL_LINKS.updatesUrl,
+          discordUrl: GLOBAL_LINKS.discordUrl
+        }, { merge: true });
+      });
+      await Promise.all(writes);
+      toast("Demo cards seeded to Firestore");
+    }
 
-      function draw(){
-        t += .0025;
-        bctx.clearRect(0,0,w,h);
-        fctx.clearRect(0,0,w,h);
+    // =============================
+    // 5) Firebase init
+    // =============================
+    let db = null;
+    const configLooksReady = Object.values(firebaseConfig).every(v => typeof v === "string" && !v.includes("PASTE_YOUR_") && v.trim().length > 0);
 
-        const g = bctx.createLinearGradient(0,0,w,h);
-        g.addColorStop(0, `rgba(59,130,246,${.05 + Math.sin(t + backgroundSeed) * .01})`);
-        g.addColorStop(.5, `rgba(255,255,255,${.09 + Math.cos(t * 1.1) * .01})`);
-        g.addColorStop(1, `rgba(124,58,237,${.05 + Math.sin(t * .8 + 1) * .01})`);
-        bctx.fillStyle = g;
-        bctx.fillRect(0,0,w,h);
+    if (configLooksReady) {
+      try{
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+      }catch(err){
+        console.error(err);
+        db = null;
+      }
+    }
 
-        for(const s of bubbles){
-          s.x += s.vx; s.y += s.vy;
-          if(s.x < -.05) s.x = 1.05;
-          if(s.x > 1.05) s.x = -.05;
-          if(s.y < -.05) s.y = 1.05;
-          if(s.y > 1.05) s.y = -.05;
-          bctx.beginPath();
-          bctx.fillStyle = `rgba(59,130,246,${s.a})`;
-          bctx.arc(s.x*w, s.y*h, s.r*devicePixelRatio, 0, Math.PI*2);
-          bctx.fill();
+    // =============================
+    // 6) Events
+    // =============================
+    document.addEventListener("click", async (e) => {
+      const modeBtn = e.target.closest("[data-mode]");
+      if (modeBtn) setMode(modeBtn.dataset.mode);
+
+      const sortBtn = e.target.closest("[data-sort]");
+      if (sortBtn) setMode(sortBtn.dataset.sort);
+
+      const actionBtn = e.target.closest("[data-action]");
+      if (actionBtn) {
+        const appId = actionBtn.dataset.id;
+        const app = state.apps.find(a => a.id === appId);
+        if (!app) return;
+
+        const action = actionBtn.dataset.action;
+        if (action === "toggle") {
+          app._expanded = !app._expanded;
+          render();
+          return;
         }
-
-        for(let i=0;i<particles.length;i++){
-          const p = particles[i];
-          p.x += p.vx; p.y += p.vy;
-          if(p.x < -.1) p.x = 1.1;
-          if(p.x > 1.1) p.x = -.1;
-          if(p.y < -.1) p.y = 1.1;
-          if(p.y > 1.1) p.y = -.1;
-          const x = p.x*w, y = p.y*h;
-          fctx.beginPath();
-          fctx.fillStyle = "rgba(59,130,246,.40)";
-          fctx.arc(x,y,p.r*devicePixelRatio,0,Math.PI*2);
-          fctx.fill();
-          for(let j=i+1;j<particles.length;j++){
-            const q = particles[j];
-            const dx = (p.x-q.x)*w, dy = (p.y-q.y)*h, dist = Math.hypot(dx,dy), maxDist = 170*devicePixelRatio;
-            if(dist < maxDist){
-              fctx.beginPath();
-              fctx.strokeStyle = `rgba(59,130,246,${.08*(1-dist/maxDist)})`;
-              fctx.lineWidth = 1;
-              fctx.moveTo(x,y);
-              fctx.lineTo(q.x*w,q.y*h);
-              fctx.stroke();
-            }
+        if (action === "rate") {
+          openRatingModal(app);
+          return;
+        }
+        if (action === "download") {
+          try{
+            await incrementDownloads(app.id);
+            if (app.appUrl) window.open(app.appUrl, "_blank", "noopener,noreferrer");
+          }catch(err){
+            console.error(err);
+            toast("Download update failed");
           }
+          return;
         }
-        requestAnimationFrame(draw);
+        if (action === "open") {
+          try{
+            await incrementDownloads(app.id);
+          }catch(err){
+            console.error(err);
+          }
+          if (app.appUrl) window.open(app.appUrl, "_blank", "noopener,noreferrer");
+        }
       }
-      draw();
-    }
 
-    document.addEventListener("contextmenu", e => e.preventDefault());
-    initBackground();
-    loadFirestore();
+      const ratingBtn = e.target.closest("[data-rating]");
+      if (ratingBtn) setSelectedRating(Number(ratingBtn.dataset.rating));
+    });
 
-    // Default hash handling for clean nav state.
-    if(location.hash){
-      const link = navLinks.find(n => n.getAttribute("href") === location.hash);
-      if(link) highlightNav(link.dataset.nav);
-    }
+    els.openDrawer.addEventListener("click", openDrawer);
+    els.closeDrawer.addEventListener("click", closeDrawer);
+    els.drawerBackdrop.addEventListener("click", closeDrawer);
+    els.openHome.addEventListener("click", () => { setMode("home"); window.location.hash = "#home"; });
+
+    els.closeModal.addEventListener("click", closeModal);
+    els.modalBackdrop.addEventListener("click", closeModal);
+    els.cancelRating.addEventListener("click", closeModal);
+    els.submitRating.addEventListener("click", async () => {
+      if (!state.selectedApp) return;
+      await submitRatingForApp(state.selectedApp.id, state.selectedRating);
+    });
+
+    els.searchInput.addEventListener("input", () => {
+      state.search = els.searchInput.value || "";
+      render();
+    });
+    els.clearSearch.addEventListener("click", () => {
+      els.searchInput.value = "";
+      state.search = "";
+      render();
+      els.searchInput.focus();
+    });
+
+    els.refreshBtn.addEventListener("click", () => {
+      setupLiveListener();
+      toast("Refreshed");
+    });
+
+    els.seedDemo.addEventListener("click", seedDemoToFirestore);
+
+    els.bugBtn.addEventListener("click", () => openUrl(GLOBAL_LINKS.bugUrl));
+    els.requestBtn.addEventListener("click", () => openUrl(GLOBAL_LINKS.requestUrl));
+    els.updatesBtn.addEventListener("click", () => openUrl(GLOBAL_LINKS.updatesUrl));
+    els.discordBtn.addEventListener("click", () => copyText(GLOBAL_LINKS.discordUrl));
+
+    document.querySelectorAll(".themeBtn").forEach(btn => {
+      btn.addEventListener("click", () => setTheme(btn.dataset.theme));
+    });
+
+    els.copyTutorialBtn.addEventListener("click", async () => {
+      const notes = `Firebase setup:
+1) Create Firebase project
+2) Enable Firestore
+3) Paste web app config into firebaseConfig
+4) Add docs to collection "apps"
+5) Use fields: title, description, banner, appUrl, downloads, ratingTotal, ratingCount, createdAt, tags, bugUrl, requestUrl, updatesUrl, discordUrl`;
+      await copyText(notes);
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeDrawer();
+        closeModal();
+      }
+    });
+
+    // =============================
+    // 7) Initial boot
+    // =============================
+    setTheme(getTheme());
+    setMode("home");
+    setupLiveListener();
   </script>
 </body>
-</html>
+  </html>
