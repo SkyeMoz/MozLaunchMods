@@ -114,16 +114,49 @@
       .nav{justify-content:space-between}
     }
     @media (max-width:760px){
-      .app{padding:12px}
-      .nav{width:calc(100% - 16px);height:68px;padding:10px 12px;top:8px}
-      .brandText span{max-width:20ch}
-      .wrap{padding-top:calc(68px + 10px)}
-      .hero,.toolbar{border-radius:26px}
+      .app{padding:8px}
+      .nav{width:calc(100% - 12px);height:64px;padding:8px 10px;top:6px}
+      .brandText span{max-width:18ch}
+      .wrap{padding-top:calc(64px + 8px);gap:10px}
+      .hero,.toolbar{border-radius:22px}
       .heroStats{grid-template-columns:1fr}
       .toolbar{grid-template-columns:1fr}
       .controls{justify-content:flex-start}
       .count{justify-self:start}
-      .grid{grid-template-columns:1fr}
+      .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+      .card{
+        min-height:0;
+        padding:10px;
+        border-radius:18px;
+        gap:8px;
+        grid-template-rows:auto auto auto auto;
+      }
+      .cardTop{gap:8px}
+      .appInfo{gap:8px}
+      .appThumb{width:44px;height:44px;border-radius:14px}
+      .titleRow{gap:6px}
+      .titleRow h2{font-size:.78rem;line-height:1.12}
+      .tag{display:none}
+      .desc{display:none}
+      .meta{display:flex;flex-direction:column;align-items:flex-start;gap:6px;font-size:.72rem;padding-top:0}
+      .metaItem{padding:6px 8px;border-radius:12px;gap:5px;max-width:100%}
+      .metaItem svg{width:12px;height:12px}
+      .actions{display:none}
+      .likeBtn{
+        width:100%;
+        padding:7px 8px;
+        font-size:.72rem;
+        gap:6px;
+        border-radius:999px;
+      }
+      .likeCount{font-size:.7rem}
+      .progress{padding-top:0;gap:6px}
+      .progressTop{font-size:.7rem}
+      .bar{height:8px}
+      .drawer{width:calc(100vw - 12px);height:calc(100vh - 12px);margin:6px;padding:14px;border-radius:24px}
+      .drawerLink{justify-content:flex-start}
+      .themeSwitch{min-width:auto;padding:6px 10px}
+      .themeLabel{display:none}
     }
   
     body[data-scheme="navy"]{
@@ -153,6 +186,49 @@
     body[data-scheme="navy"] .empty{
       border-color: rgba(148,163,184,.14);
     }
+    body[data-scheme="navy"] .glass{
+      background:linear-gradient(180deg,rgba(8,18,34,.78),rgba(8,18,34,.58));
+    }
+    body[data-scheme="navy"] .brand:hover,
+    body[data-scheme="navy"] .iconBtn,
+    body[data-scheme="navy"] .chip,
+    body[data-scheme="navy"] .count,
+    body[data-scheme="navy"] .themeSwitch,
+    body[data-scheme="navy"] .drawerLink,
+    body[data-scheme="navy"] .launchBtn,
+    body[data-scheme="navy"] .likeBtn,
+    body[data-scheme="navy"] .search input,
+    body[data-scheme="navy"] .statCard,
+    body[data-scheme="navy"] .hero,
+    body[data-scheme="navy"] .toolbar,
+    body[data-scheme="navy"] .card,
+    body[data-scheme="navy"] .empty,
+    body[data-scheme="navy"] .metaItem,
+    body[data-scheme="navy"] .modalCard{
+      background:rgba(8,18,34,.72);
+      color:var(--text);
+    }
+    body[data-scheme="navy"] .brand:hover,
+    body[data-scheme="navy"] .iconBtn:hover,
+    body[data-scheme="navy"] .chip:hover,
+    body[data-scheme="navy"] .chip.active,
+    body[data-scheme="navy"] .count,
+    body[data-scheme="navy"] .themeSwitch:hover,
+    body[data-scheme="navy"] .drawerLink:hover{
+      background:rgba(15,29,51,.90);
+    }
+    body[data-scheme="navy"] .search input::placeholder{color:rgba(184,195,218,.72)}
+    body[data-scheme="navy"] .search input{border-color:rgba(148,163,184,.14)}
+    body[data-scheme="navy"] .statCard{background:linear-gradient(180deg,rgba(14,25,45,.92),rgba(8,18,34,.72))}
+    body[data-scheme="navy"] .hero{background:linear-gradient(180deg,rgba(14,25,45,.92),rgba(8,18,34,.74))}
+    body[data-scheme="navy"] .toolbar{background:linear-gradient(180deg,rgba(14,25,45,.92),rgba(8,18,34,.74))}
+    body[data-scheme="navy"] .card{background:linear-gradient(180deg,rgba(14,25,45,.92),rgba(8,18,34,.74))}
+    body[data-scheme="navy"] .metaItem{border-color:rgba(148,163,184,.14)}
+    body[data-scheme="navy"] .launchBtn{background:linear-gradient(135deg,#0f4c81,#1d6fa8)}
+    body[data-scheme="navy"] .likeBtn{border-color:rgba(34,197,94,.28);background:rgba(34,197,94,.14)}
+    body[data-scheme="navy"] .likeBtn:hover{background:rgba(34,197,94,.20)}
+    body[data-scheme="navy"] .drawer{background:linear-gradient(180deg,rgba(14,25,45,.96),rgba(8,18,34,.86))}
+    body[data-scheme="navy"] .modalCard{background:linear-gradient(180deg,rgba(14,25,45,.96),rgba(8,18,34,.82))}
     .hamburgerBtn{position:relative}
     .hamburgerBtn .lines{display:grid;gap:4px}
     .hamburgerBtn .lines span{display:block;width:18px;height:2px;border-radius:999px;background:currentColor}
@@ -184,13 +260,12 @@
     .drawerTitle span{color:var(--muted);font-size:.88rem}
     .drawerList{display:grid;gap:10px;margin-top:4px;overflow:auto;padding-right:2px}
     .drawerLink{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      display:flex;align-items:center;justify-content:flex-start;gap:12px;
       padding:14px 16px;border-radius:20px;text-decoration:none;color:var(--text);
       background:rgba(255,255,255,.70);border:1px solid rgba(15,23,42,.08);
       font-weight:900;transition:transform 160ms ease,background 160ms ease,border-color 160ms ease,box-shadow 160ms ease
     }
     .drawerLink:hover{transform:translateY(-1px);background:rgba(255,255,255,.92);border-color:rgba(37,99,235,.16);box-shadow:0 12px 24px rgba(15,23,42,.08)}
-    .drawerHint{color:var(--muted);font-size:.84rem;font-weight:700}
     .cardTop{align-items:flex-start}
     .cardActions{display:flex;flex-direction:column;align-items:flex-end;gap:10px;min-width:108px;flex:0 0 auto}
     .likeBtn{
@@ -331,30 +406,24 @@
       <div class="drawerHeader">
         <div class="drawerTitle">
           <strong id="drawerTitle">Menu</strong>
-          <span>Open one of the quick links below</span>
         </div>
         <button class="close" id="closeDrawer" type="button" aria-label="Close menu" style="width:42px;height:42px;border-radius:14px;border:1px solid rgba(15,23,42,.08);background:rgba(255,255,255,.90);color:var(--text);font-size:20px;cursor:pointer;">×</button>
       </div>
       <div class="drawerList" id="drawerList">
         <a class="drawerLink" href="#" data-link="tutorial">
           <span>Tutorial</span>
-          <span class="drawerHint">Open link</span>
         </a>
         <a class="drawerLink" href="#" data-link="reportBug">
           <span>Report Bug</span>
-          <span class="drawerHint">Open link</span>
         </a>
         <a class="drawerLink" href="#" data-link="requestFile">
           <span>Request File</span>
-          <span class="drawerHint">Open link</span>
         </a>
         <a class="drawerLink" href="#" data-link="joinDiscord">
           <span>Join Discord</span>
-          <span class="drawerHint">Open link</span>
         </a>
         <a class="drawerLink" href="#" data-link="updateLogs">
           <span>Update logs</span>
-          <span class="drawerHint">Open link</span>
         </a>
       </div>
     </aside>
@@ -583,6 +652,21 @@
       const likeTotal = card.querySelector(".likeTotal");
       const stages = ["Loading package", "Optimizing assets", "Building session", "Opening link"];
 
+      card.addEventListener("click", (e) => {
+        if(e.target.closest(".likeBtn") || e.target.closest(".launchBtn")) return;
+        startLaunch({
+          title: esc(item.title),
+          sub: esc(item.description),
+          progress,
+          pStage,
+          pPct,
+          bar,
+          button: btn,
+          stages,
+          link: item.launch
+        });
+      });
+
       likeBtn.addEventListener("click", async (e) => {
         e.stopPropagation();
         if(likeBtn.disabled) return;
@@ -595,17 +679,20 @@
         await incrementLike(item);
       });
 
-      btn.addEventListener("click", () => startLaunch({
-        title: esc(item.title),
-        sub: esc(item.description),
-        progress,
-        pStage,
-        pPct,
-        bar,
-        button: btn,
-        stages,
-        link: item.launch
-      }));
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        startLaunch({
+          title: esc(item.title),
+          sub: esc(item.description),
+          progress,
+          pStage,
+          pPct,
+          bar,
+          button: btn,
+          stages,
+          link: item.launch
+        });
+      });
 
       grid.appendChild(card);
     });
