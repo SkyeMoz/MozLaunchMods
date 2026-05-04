@@ -3,366 +3,215 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#06111d" />
+  <meta name="theme-color" content="#07111f" />
   <title>MozLaunch</title>
   <style>
     :root{
-      --bg0:#06111d;
-      --bg1:#081423;
-      --bg2:#050b14;
-      --glass:rgba(7,14,26,.82);
-      --glass-strong:rgba(10,18,32,.96);
-      --line:rgba(120,149,188,.18);
-      --text:#edf4ff;
-      --muted:#9bb0d0;
-      --accent:#0f4c81;
-      --accent-2:#1d6fa8;
-      --accent-3:#4ea0ff;
-      --success:#22c55e;
-      --shadow:0 24px 70px rgba(2,8,23,.44);
-      --shadow-soft:0 14px 36px rgba(2,8,23,.30);
-      --nav-h:64px;
-      --drawer-w:min(360px,calc(100vw - 18px));
-      color-scheme: dark;
+      --bg0:#050b16;
+      --bg1:#081220;
+      --bg2:#0d1a2d;
+      --glass:rgba(9, 18, 32, .58);
+      --glass-strong:rgba(12, 23, 41, .78);
+      --line:rgba(148, 163, 184, .12);
+      --line-strong:rgba(96, 165, 250, .18);
+      --text:#e5eefc;
+      --muted:#91a4c2;
+      --accent:#3b82f6;
+      --accent2:#7c3aed;
+      --accent3:#22d3ee;
+      --shadow:0 28px 70px rgba(0,0,0,.36);
+      --shadow-soft:0 18px 44px rgba(0,0,0,.22);
+      --nav-h:76px;
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     html,body{
-      margin:0;
-      min-height:100%;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at 10% 15%,rgba(15,76,129,.28),transparent 24%),
-        radial-gradient(circle at 85% 8%,rgba(78,160,255,.12),transparent 24%),
-        radial-gradient(circle at 55% 100%,rgba(29,111,168,.10),transparent 22%),
-        linear-gradient(180deg,var(--bg2) 0%,var(--bg0) 45%,var(--bg1) 100%);
+        radial-gradient(circle at 10% 12%, rgba(59,130,246,.14), transparent 26%),
+        radial-gradient(circle at 90% 4%, rgba(124,58,237,.15), transparent 22%),
+        radial-gradient(circle at 50% 100%, rgba(34,211,238,.08), transparent 26%),
+        linear-gradient(180deg,var(--bg0),var(--bg1) 44%,var(--bg2));
       overflow-x:hidden;
       user-select:none;
       -webkit-user-select:none;
     }
     body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
+      content:"";position:fixed;inset:0;pointer-events:none;
+      background:linear-gradient(135deg,rgba(255,255,255,.07),transparent 24%,rgba(255,255,255,.03));
       z-index:0;
-      background:
-        linear-gradient(120deg,rgba(5,10,18,.92),transparent 20%,rgba(5,10,18,.38)),
-        radial-gradient(circle at 50% 0%,rgba(10,18,32,.80),transparent 34%);
     }
-    body[data-scheme="light"]{
-      --bg0:#f7f9ff;
-      --bg1:#eef3ff;
-      --bg2:#ffffff;
-      --glass:rgba(255,255,255,.64);
-      --glass-strong:rgba(255,255,255,.82);
-      --line:rgba(15,23,42,.08);
-      --text:#0f172a;
-      --muted:#64748b;
-      --accent:#2563eb;
-      --accent-2:#8b5cf6;
-      --accent-3:#06b6d4;
-      --success:#16a34a;
-      --shadow:0 24px 70px rgba(15,23,42,.10);
-      --shadow-soft:0 14px 36px rgba(15,23,42,.08);
-      color-scheme: light;
-      background:
-        radial-gradient(circle at 12% 18%,rgba(37,99,235,.10),transparent 26%),
-        radial-gradient(circle at 85% 8%,rgba(139,92,246,.10),transparent 24%),
-        radial-gradient(circle at 55% 100%,rgba(6,182,212,.08),transparent 22%),
-        linear-gradient(180deg,var(--bg2) 0%,var(--bg0) 45%,var(--bg1) 100%);
-    }
-    body[data-scheme="light"]::before{
-      background:
-        linear-gradient(120deg,rgba(255,255,255,.88),transparent 20%,rgba(255,255,255,.18)),
-        radial-gradient(circle at 50% 0%,rgba(255,255,255,.66),transparent 34%);
-    }
-
     canvas{position:fixed;inset:0;width:100%;height:100%;display:block;pointer-events:none}
-    #bgCanvas{z-index:0}
-    #fxCanvas{z-index:1}
-    .app{position:relative;z-index:2;min-height:100vh;padding:8px}
-    .wrap{width:min(1320px,100%);margin:0 auto;display:grid;gap:10px;padding-top:calc(var(--nav-h) + 10px)}
-    .glass{
-      background:linear-gradient(180deg,var(--glass-strong),var(--glass));
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(28px) saturate(170%);
-      -webkit-backdrop-filter:blur(28px) saturate(170%);
-    }
+    #bgCanvas{z-index:0} #fxCanvas{z-index:1}
+    .app{position:relative;z-index:2;min-height:100vh;padding:18px}
+    .wrap{width:min(1380px,100%);margin:0 auto;display:grid;gap:16px;padding-top:calc(var(--nav-h) + 8px)}
+    .glass{background:linear-gradient(180deg,var(--glass-strong),var(--glass));border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%)}
 
-    .nav{
-      position:fixed;
-      top:6px;
-      left:50%;
-      transform:translateX(-50%);
-      width:min(1320px,calc(100% - 12px));
-      height:var(--nav-h);
-      border-radius:999px;
-      z-index:50;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:8px 10px 8px 12px;
-    }
-    .brand{
-      display:flex;align-items:center;gap:12px;min-width:0;cursor:pointer;
-      padding:4px 8px 4px 4px;border-radius:999px;
-      transition:transform 160ms ease,background 160ms ease,box-shadow 160ms ease;
-    }
-    .brand:hover{transform:translateY(-1px);background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(2,8,23,.06)}
-    .brandMark{
-      width:44px;height:44px;border-radius:16px;display:grid;place-items:center;flex:0 0 auto;
-      background:linear-gradient(135deg,rgba(15,76,129,1),rgba(29,111,168,1));
-      box-shadow:0 14px 28px rgba(15,76,129,.28);
-    }
-    .brandText{min-width:0;display:grid;gap:1px}
-    .brandText strong{font-size:1.02rem;line-height:1.1;letter-spacing:.2px}
-    .brandText span{font-size:.85rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34ch}
+    .nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:min(1380px,calc(100% - 20px));height:var(--nav-h);border-radius:999px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px 12px 16px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0;cursor:pointer;padding:6px 10px 6px 6px;border-radius:999px;transition:transform 160ms ease,background 160ms ease,box-shadow 160ms ease}
+    .brand:hover{transform:translateY(-1px);background:rgba(255,255,255,.05);box-shadow:0 10px 24px rgba(15,23,42,.18)}
+    .brandMark{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;flex:0 0 auto;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 14px 28px rgba(59,130,246,.24)}
+    .brandText{min-width:0;display:grid;gap:2px}
+    .brandText strong{font-size:1rem;line-height:1.1;letter-spacing:.2px}
+    .brandText span{font-size:.86rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34ch}
     .navCenter{display:flex;align-items:center;gap:10px;flex:1;justify-content:center;min-width:0}
-    .navLink{
-      display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;background:transparent;color:var(--muted);
-      font-weight:800;font-size:.92rem;padding:10px 14px;border-radius:999px;cursor:pointer;
-      transition:transform 160ms ease,background 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease;
-      text-decoration:none;white-space:nowrap
-    }
-    .navLink:hover,.navLink.active{
-      color:var(--text);background:rgba(255,255,255,.08);border-color:rgba(78,160,255,.14);
-      box-shadow:0 10px 24px rgba(2,8,23,.08);transform:translateY(-1px)
-    }
+    .navLink{display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;background:transparent;color:var(--muted);font-weight:800;font-size:.92rem;padding:10px 14px;border-radius:999px;cursor:pointer;transition:transform 160ms ease,background 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease;text-decoration:none;white-space:nowrap}
+    .navLink:hover,.navLink.active{color:var(--text);background:rgba(255,255,255,.06);border-color:rgba(96,165,250,.16);box-shadow:0 10px 24px rgba(0,0,0,.12);transform:translateY(-1px)}
     .navRight{display:flex;align-items:center;gap:10px;flex:0 0 auto}
-    .iconBtn,.themeSwitch,.drawerLink,.launchBtn,.likeBtn,.chip,.close,.copyBtn{touch-action:manipulation}
-    .iconBtn{
-      width:40px;height:40px;display:grid;place-items:center;border-radius:14px;border:1px solid var(--line);
-      background:rgba(255,255,255,.06);color:var(--text);cursor:pointer;
-      transition:transform 160ms ease,border-color 160ms ease,box-shadow 160ms ease,background 160ms ease
-    }
-    .iconBtn:hover{transform:translateY(-1px);border-color:rgba(78,160,255,.18);box-shadow:0 12px 24px rgba(2,8,23,.08);background:rgba(255,255,255,.10)}
+    .statusPill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);font-weight:800;font-size:.9rem;white-space:nowrap}
+    .dot{width:9px;height:9px;border-radius:999px;background:#22c55e;box-shadow:0 0 0 5px rgba(34,197,94,.14)}
 
-    .hero{border-radius:30px;padding:18px;animation:rise .65s ease both}
-    .heroTop{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;align-items:stretch}
-    .heroCopy{display:grid;gap:12px;align-content:start;min-width:0}
+    .hero{border-radius:36px;padding:22px;animation:rise .7s ease both}
+    .heroTop{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch}
+    .heroCopy{display:grid;gap:14px;align-content:start;min-width:0}
     .heroBadgeRow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:10px 14px;font-size:.88rem;font-weight:800;
-      border:1px solid rgba(78,160,255,.14);background:rgba(255,255,255,.06);color:var(--text);box-shadow:0 10px 20px rgba(2,8,23,.05)
-    }
-    .hero h1{margin:0;font-size:clamp(2rem,4vw,3.8rem);line-height:1;letter-spacing:-.03em}
-    .hero p{margin:0;max-width:62ch;color:var(--muted);line-height:1.6;font-size:1rem}
+    .badge{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:10px 14px;font-size:.88rem;font-weight:800;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);box-shadow:0 10px 20px rgba(0,0,0,.12)}
+    .hero h1{margin:0;font-size:clamp(2rem,4vw,3.8rem);line-height:1;letter-spacing:-.04em}
+    .hero p{margin:0;max-width:68ch;color:var(--muted);line-height:1.6;font-size:1rem}
     .heroStats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .statCard{
-      border-radius:24px;padding:16px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
-      border:1px solid var(--line);box-shadow:var(--shadow-soft);min-height:96px;display:grid;align-content:space-between;gap:12px
-    }
-    .statIcon{
-      width:40px;height:40px;border-radius:14px;display:grid;place-items:center;
-      background:rgba(15,76,129,.18);border:1px solid rgba(78,160,255,.12)
-    }
-    .statCard strong{display:block;font-size:1.18rem;line-height:1.1;margin-top:2px}
+    .statCard{border-radius:24px;padding:16px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid var(--line);box-shadow:var(--shadow-soft);min-height:106px;display:grid;align-content:space-between;gap:12px}
+    .statIcon{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;background:rgba(59,130,246,.12);border:1px solid rgba(96,165,250,.12)}
+    .statCard strong{display:block;font-size:1.2rem;line-height:1.1;margin-top:2px}
     .statCard span{font-size:.88rem;color:var(--muted)}
 
-    .toolbar{border-radius:26px;padding:14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;animation:rise .72s ease both}
+    .toolbar{border-radius:28px;padding:14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;animation:rise .78s ease both}
     .search{position:relative;min-width:0}
-    .search input{
-      width:100%;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);
-      padding:15px 16px 15px 50px;border-radius:18px;outline:none;font-size:1rem;
-      transition:border-color 160ms ease,box-shadow 160ms ease,transform 160ms ease,background 160ms ease;
-      user-select:text;-webkit-user-select:text
-    }
-    .search input:focus{border-color:rgba(78,160,255,.26);box-shadow:0 0 0 4px rgba(78,160,255,.10);transform:translateY(-1px);background:rgba(255,255,255,.08)}
-    .searchIcon{position:absolute;left:16px;top:50%;transform:translateY(-50%);opacity:.72;pointer-events:none}
+    .search input{width:100%;border:1px solid var(--line);background:rgba(2,6,23,.38);color:var(--text);padding:16px 16px 16px 50px;border-radius:18px;outline:none;font-size:1rem;transition:border-color 160ms ease,box-shadow 160ms ease,transform 160ms ease,background 160ms ease;user-select:text;-webkit-user-select:text}
+    .search input:focus{border-color:rgba(59,130,246,.34);box-shadow:0 0 0 4px rgba(59,130,246,.12);transform:translateY(-1px);background:rgba(2,6,23,.56)}
+    .searchIcon{position:absolute;left:16px;top:50%;transform:translateY(-50%);opacity:.82;pointer-events:none}
     .controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .chip{
-      border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--muted);padding:11px 14px;border-radius:999px;
-      font-size:.9rem;font-weight:800;cursor:pointer;
-      transition:transform 160ms ease,background 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease;
-      display:inline-flex;align-items:center;gap:8px
-    }
-    .chip:hover,.chip.active{
-      transform:translateY(-1px);color:var(--text);background:rgba(255,255,255,.10);border-color:rgba(78,160,255,.16);box-shadow:0 12px 24px rgba(2,8,23,.08)
-    }
-    .count{white-space:nowrap;color:var(--muted);font-weight:800;padding:11px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06)}
+    .chip{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);padding:11px 14px;border-radius:999px;font-size:.9rem;font-weight:800;cursor:pointer;transition:transform 160ms ease,background 160ms ease,color 160ms ease,border-color 160ms ease,box-shadow 160ms ease;display:inline-flex;align-items:center;gap:8px}
+    .chip:hover,.chip.active{transform:translateY(-1px);color:var(--text);background:rgba(255,255,255,.07);border-color:rgba(96,165,250,.2);box-shadow:0 12px 24px rgba(0,0,0,.12)}
+    .count{white-space:nowrap;color:var(--muted);font-weight:800;padding:11px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
 
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px;padding-bottom:8px;align-items:stretch}
-    .card{
-      position:relative;overflow:hidden;border-radius:26px;border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
-      backdrop-filter:blur(24px) saturate(165%);-webkit-backdrop-filter:blur(24px) saturate(165%);
-      box-shadow:var(--shadow-soft);padding:14px;opacity:0;transform:translateY(18px) scale(.985);
-      animation:cardIn .72s ease forwards;transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
-      min-height:0;display:grid;grid-template-rows:auto auto 1fr auto auto;gap:10px;cursor:pointer
+    /* 3-column layout */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:16px;
+      padding-bottom:8px;
     }
-    .card:hover{transform:translateY(-4px) scale(1);border-color:rgba(78,160,255,.18);box-shadow:0 26px 54px rgba(2,8,23,.16)}
-    .cardGlow{position:absolute;inset:auto -20% -30% auto;width:220px;height:220px;background:radial-gradient(circle,rgba(15,76,129,.18),transparent 72%);pointer-events:none;filter:blur(10px)}
-    .cardTop{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start;min-width:0}
-    .appInfo{display:flex;gap:10px;min-width:0;flex:1;align-items:flex-start}
+
+    .card{
+      position:relative;
+      overflow:hidden;
+      border-radius:30px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      backdrop-filter:blur(24px) saturate(165%);
+      -webkit-backdrop-filter:blur(24px) saturate(165%);
+      box-shadow:var(--shadow-soft);
+      padding:clamp(14px,1.35vw,18px);
+      opacity:0;
+      transform:translateY(18px) scale(.985);
+      animation:cardIn .72s ease forwards;
+      transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
+      min-height:clamp(290px,30vw,340px);
+      display:grid;
+      grid-template-rows:auto auto 1fr auto auto;
+      gap:clamp(10px,1vw,14px);
+    }
+    .card:hover{transform:translateY(-4px) scale(1);border-color:rgba(96,165,250,.2);box-shadow:0 26px 54px rgba(0,0,0,.26)}
+    .cardGlow{position:absolute;inset:auto -20% -30% auto;width:250px;height:250px;background:radial-gradient(circle,rgba(59,130,246,.11),transparent 72%);pointer-events:none;filter:blur(10px)}
+    .cardTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .appInfo{display:flex;gap:clamp(10px,1vw,14px);min-width:0;flex:1}
     .appThumb{
-      width:52px;height:52px;border-radius:16px;overflow:hidden;flex:0 0 auto;
-      background:linear-gradient(135deg,rgba(15,76,129,.18),rgba(29,111,168,.10));
-      border:1px solid var(--line);box-shadow:0 14px 24px rgba(2,8,23,.08);display:grid;place-items:center
+      width:clamp(58px,6vw,74px);
+      height:clamp(58px,6vw,74px);
+      border-radius:clamp(18px,1.8vw,22px);
+      overflow:hidden;
+      flex:0 0 auto;
+      background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(124,58,237,.12));
+      border:1px solid var(--line);
+      box-shadow:0 14px 24px rgba(0,0,0,.12);
+      display:grid;
+      place-items:center;
     }
     .appThumb img{width:100%;height:100%;object-fit:cover;display:block}
-    .appIconFallback{color:currentColor}
-    .appText{min-width:0;flex:1;display:grid;gap:6px}
-    .titleRow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .appIconFallback{color:#d9e6fb;display:grid;place-items:center}
+    .appText{min-width:0;flex:1;display:grid;gap:7px}
+    .titleRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
     .titleRow h2{
-      margin:0;font-size:.98rem;line-height:1.1;letter-spacing:-.02em;
-      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden
+      margin:0;
+      font-size:clamp(.94rem,1.08vw,1.06rem);
+      line-height:1.15;
+      letter-spacing:-.02em;
+      word-break:break-word;
     }
     .tag{
-      display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;font-size:.7rem;font-weight:900;letter-spacing:.2px;
-      color:#7cc5ff;border:1px solid rgba(78,160,255,.16);background:rgba(15,76,129,.16)
+      display:inline-flex;
+      align-items:center;
+      padding:clamp(5px,.55vw,6px) clamp(8px,.85vw,10px);
+      border-radius:999px;
+      font-size:clamp(.7rem,.72vw,.76rem);
+      font-weight:900;
+      letter-spacing:.2px;
+      color:#dbeafe;
+      border:1px solid rgba(96,165,250,.18);
+      background:rgba(59,130,246,.10);
     }
     .desc{
-      margin:0;color:var(--muted);line-height:1.45;font-size:.88rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
-      min-height:3.9em
+      margin:0;
+      color:var(--muted);
+      line-height:1.56;
+      font-size:clamp(.88rem,.92vw,.96rem);
+      min-height:3.1lh;
+      word-break:break-word;
     }
-    .cardActions{display:flex;flex-direction:column;align-items:flex-end;gap:8px;min-width:0;flex:0 0 auto;justify-self:end}
-    .likeBtn{
-      display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(34,197,94,.22);
-      background:rgba(34,197,94,.14);color:#86efac;width:42px;height:42px;border-radius:14px;font-size:0;font-weight:900;
-      cursor:pointer;transition:transform 160ms ease,box-shadow 160ms ease,background 160ms ease,border-color 160ms ease;flex:0 0 auto
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      color:#d7e5fb;
+      font-size:clamp(.8rem,.85vw,.88rem);
+      font-weight:700;
+      padding-top:2px;
     }
-    .likeBtn svg{color:#4ade80;width:16px;height:16px}
-    .likeBtn:hover{transform:translateY(-1px);box-shadow:0 12px 22px rgba(22,163,74,.12);background:rgba(34,197,94,.20)}
-    .likeBtn.liked{background:rgba(34,197,94,.20);border-color:rgba(22,163,74,.32)}
-    .likeBtn:disabled{cursor:default;opacity:.88}
-    .likeCount{font-size:.74rem;color:var(--muted);font-weight:900;text-align:right;line-height:1.1}
-    .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:var(--muted);font-size:.82rem;font-weight:700;padding-top:2px}
     .metaItem{
-      display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border-radius:999px;
-      background:rgba(255,255,255,.06);border:1px solid var(--line);max-width:100%
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
     }
-    .timeItem{white-space:nowrap}
-    .progress{display:none;gap:8px}
-    .progress.active{display:grid}
-    .progressTop{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--muted);font-size:.82rem;font-weight:800}
-    .bar{
-      height:10px;border-radius:999px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.06)
-    }
-    .bar>span{
-      display:block;height:100%;width:0%;border-radius:inherit;
-      background:linear-gradient(90deg,var(--accent),var(--accent-3),var(--accent-2));
-      transition:width 120ms linear
-    }
-    .actions{display:grid}
     .launchBtn{
-      width:100%;border:0;border-radius:16px;padding:12px 14px;color:#fff;cursor:pointer;font-weight:900;font-size:.98rem;
-      background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 16px 28px rgba(15,76,129,.18);
-      transition:transform 160ms ease,filter 160ms ease,box-shadow 160ms ease,opacity 160ms ease
+      width:100%;
+      border:0;
+      border-radius:18px;
+      padding:clamp(11px,1.1vw,13px) clamp(14px,1.2vw,16px);
+      color:#fff;
+      cursor:pointer;
+      font-weight:900;
+      font-size:clamp(.9rem,1vw,.98rem);
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:0 16px 28px rgba(59,130,246,.18);
+      transition:transform 160ms ease,filter 160ms ease,box-shadow 160ms ease,opacity 160ms ease;
     }
-    .launchBtn:hover{transform:translateY(-1px);filter:brightness(1.03);box-shadow:0 18px 30px rgba(2,8,23,.10)}
+    .launchBtn:hover{transform:translateY(-1px);filter:brightness(1.03);box-shadow:0 18px 30px rgba(0,0,0,.12)}
     .launchBtn:disabled{opacity:.82;cursor:wait;transform:none}
-    .empty{
-      grid-column:1 / -1;padding:34px 20px;text-align:center;color:var(--muted);border-radius:24px;
-      border:1px dashed rgba(120,149,188,.26);background:rgba(255,255,255,.05);backdrop-filter:blur(18px)
-    }
-    .footer{color:rgba(155,176,208,.55);font-size:.82rem;text-align:center;padding:2px 0 10px}
+    .progress{display:none;gap:10px;padding-top:2px}
+    .progress.active{display:grid}
+    .progressTop{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#d7e5fb;font-size:.87rem;font-weight:800}
+    .bar{height:11px;border-radius:999px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+    .bar>span{display:block;height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--accent3),var(--accent2));transition:width 120ms linear}
+    .empty{grid-column:1 / -1;padding:40px 20px;text-align:center;color:var(--muted);border-radius:28px;border:1px dashed rgba(148,163,184,.18);background:rgba(255,255,255,.03);backdrop-filter:blur(18px)}
+    .footer{color:rgba(145,164,194,.75);font-size:.84rem;text-align:center;padding:2px 0 10px}
     .srOnly{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-    ::selection{background:rgba(78,160,255,.18);color:inherit}
-    ::-moz-selection{background:rgba(78,160,255,.18);color:inherit}
+    ::selection{background:rgba(59,130,246,.28);color:#eff6ff}
+    ::-moz-selection{background:rgba(59,130,246,.28);color:#eff6ff}
     img,a,button,input,textarea{-webkit-user-drag:none}
     svg{display:block;flex:0 0 auto}
     @keyframes rise{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
     @keyframes cardIn{to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes spin{to{transform:rotate(360deg)}}
-    @keyframes drawerIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
-    @keyframes toastIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 
-    .overlay,.drawerOverlay,.toastWrap{position:fixed;inset:0;z-index:80;display:none;place-items:center}
-    .overlay{background:rgba(2,6,14,.84);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-    .modalCard{
-      width:min(560px,100%);border-radius:28px;border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(10,20,36,.98),rgba(6,13,24,.96));
-      box-shadow:0 30px 90px rgba(2,8,23,.20);padding:20px;animation:pop .22s ease both
+    @media (max-width:1200px){
+      .grid{grid-template-columns:repeat(2,minmax(0,1fr));}
     }
-    .modalTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
-    .modalTitle{margin:0;font-size:1.12rem;line-height:1.2;letter-spacing:-.02em}
-    .modalSub{margin:6px 0 0;color:var(--muted);line-height:1.5;font-size:.95rem}
-    .close{
-      width:40px;height:40px;border-radius:14px;border:1px solid var(--line);
-      background:rgba(255,255,255,.06);color:var(--text);font-size:20px;cursor:pointer
-    }
-    .spinnerRow{display:flex;justify-content:center;padding:10px 0 2px}
-    .spinner{
-      width:52px;height:52px;border-radius:50%;border:4px solid rgba(78,160,255,.12);
-      border-top-color:rgba(78,160,255,.96);border-right-color:rgba(29,111,168,.92);
-      animation:spin .9s linear infinite;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)
-    }
-    .loaderWrap{display:grid;gap:12px;margin-top:12px}
-    .loaderLine{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--text);font-size:.92rem;font-weight:800}
-    .stageText{margin:0;color:var(--muted);font-size:.92rem;line-height:1.5}
-
-    .drawerOverlay{background:rgba(2,6,14,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);place-items:end start;padding:8px}
-    .drawer{
-      width:var(--drawer-w);height:calc(100vh - 16px);border-radius:28px;padding:14px;display:grid;grid-template-rows:auto 1fr;
-      gap:12px;animation:drawerIn .26s cubic-bezier(.2,.8,.2,1) both;transform-origin:right top
-    }
-    .drawerHeader{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .drawerTitle{display:grid;gap:4px;min-width:0}
-    .drawerTitle strong{font-size:1.05rem}
-    .drawerTitle span{color:var(--muted);font-size:.88rem}
-    .drawerList{display:grid;gap:10px;overflow:auto;padding-right:2px}
-    .drawerLink{
-      display:flex;align-items:center;justify-content:flex-start;gap:12px;padding:14px 16px;border-radius:20px;text-decoration:none;color:var(--text);
-      background:rgba(255,255,255,.06);border:1px solid var(--line);font-weight:900;
-      transition:transform 160ms ease,background 160ms ease,border-color 160ms ease,box-shadow 160ms ease;width:100%;cursor:pointer
-    }
-    .drawerLink:hover{transform:translateY(-1px);background:rgba(255,255,255,.09);border-color:rgba(78,160,255,.18);box-shadow:0 12px 24px rgba(2,8,23,.08)}
-    .copyBtn{border:0;background:transparent;color:inherit;padding:0;margin:0;cursor:pointer;font:inherit}
-    .drawerHint{display:none}
-
-    .themeSwitch{
-      display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--text);
-      padding:8px 12px;border-radius:999px;cursor:pointer;font-weight:900;
-      transition:transform 160ms ease,background 160ms ease,border-color 160ms ease,box-shadow 160ms ease
-    }
-    .themeSwitch:hover{transform:translateY(-1px);border-color:rgba(78,160,255,.18);box-shadow:0 12px 24px rgba(2,8,23,.08);background:rgba(255,255,255,.10)}
-    .switchTrack{width:42px;height:24px;border-radius:999px;background:rgba(120,149,188,.12);position:relative;display:inline-block;flex:0 0 auto;border:1px solid var(--line)}
-    .switchThumb{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 3px 10px rgba(2,8,23,.22);transition:transform 180ms ease}
-    body[data-scheme="light"] .switchThumb{transform:translateX(18px)}
-    .themeLabel{font-size:.9rem}
-
-    .toastWrap{
-      top:auto;bottom:14px;left:50%;right:auto;transform:translateX(-50%);
-      width:min(560px,calc(100vw - 18px));display:grid;gap:10px;pointer-events:none
-    }
-    .toast{
-      pointer-events:none;justify-self:center;max-width:100%;padding:12px 14px;border-radius:16px;
-      background:rgba(6,12,22,.98);color:#fff;border:1px solid rgba(120,149,188,.20);
-      box-shadow:0 20px 40px rgba(2,8,23,.24);font-weight:800;font-size:.92rem;animation:toastIn .22s ease both
-    }
-
-    body[data-scheme="light"] .overlay{background:rgba(248,250,252,.62)}
-    body[data-scheme="light"] .drawerOverlay{background:rgba(7,17,31,.48)}
-    body[data-scheme="light"] .modalCard,
-    body[data-scheme="light"] .drawer,
-    body[data-scheme="light"] .glass,
-    body[data-scheme="light"] .hero,
-    body[data-scheme="light"] .toolbar,
-    body[data-scheme="light"] .card,
-    body[data-scheme="light"] .statCard,
-    body[data-scheme="light"] .empty{
-      background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(255,255,255,.84));
-      color:var(--text);
-      border-color:rgba(15,23,42,.08);
-    }
-    body[data-scheme="light"] .navLink:hover,
-    body[data-scheme="light"] .chip:hover,
-    body[data-scheme="light"] .iconBtn:hover,
-    body[data-scheme="light"] .themeSwitch:hover,
-    body[data-scheme="light"] .drawerLink:hover,
-    body[data-scheme="light"] .search input:focus{background:rgba(255,255,255,.92)}
-    body[data-scheme="light"] .search input::placeholder{color:rgba(100,116,139,.72)}
-    body[data-scheme="light"] .statIcon,
-    body[data-scheme="light"] .brandMark{background:linear-gradient(135deg,rgba(37,99,235,1),rgba(139,92,246,1))}
-    body[data-scheme="light"] .launchBtn{background:linear-gradient(135deg,var(--accent),var(--accent-2))}
-    body[data-scheme="light"] .likeBtn{border-color:rgba(34,197,94,.22);background:rgba(34,197,94,.14);color:#15803d}
-    body[data-scheme="light"] .likeBtn svg{color:#16a34a}
-    body[data-scheme="light"] .likeBtn:hover{background:rgba(34,197,94,.20)}
-
     @media (max-width:1060px){
       .heroTop{grid-template-columns:1fr}
       .heroStats{grid-template-columns:repeat(3,1fr)}
@@ -370,40 +219,37 @@
       .nav{justify-content:space-between}
     }
     @media (max-width:760px){
-      .app{padding:8px}
-      .nav{width:calc(100% - 12px);height:60px;padding:8px 10px;top:6px}
-      .brandText span{max-width:18ch}
-      .wrap{padding-top:calc(60px + 8px);gap:10px}
-      .hero,.toolbar{border-radius:22px}
+      .app{padding:12px}
+      .nav{width:calc(100% - 16px);height:68px;padding:10px 12px;top:8px}
+      .brandText span{max-width:20ch}
+      .wrap{padding-top:calc(68px + 10px)}
+      .hero,.toolbar{border-radius:26px}
       .heroStats{grid-template-columns:1fr}
       .toolbar{grid-template-columns:1fr}
       .controls{justify-content:flex-start}
       .count{justify-self:start}
-      .grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
-      .card{min-height:0;padding:11px;border-radius:18px;gap:8px}
-      .cardTop{grid-template-columns:minmax(0,1fr) auto;gap:8px}
-      .appInfo{gap:8px}
-      .appThumb{width:44px;height:44px;border-radius:14px}
-      .titleRow{gap:6px}
-      .titleRow h2{font-size:.82rem;line-height:1.12}
-      .tag{display:none}
-      .desc{display:-webkit-box;-webkit-line-clamp:2;min-height:3em;font-size:.8rem}
-      .meta{display:flex;flex-direction:column;align-items:flex-start;gap:6px;font-size:.72rem;padding-top:0}
-      .metaItem{padding:6px 8px;border-radius:12px;gap:5px;max-width:100%}
-      .metaItem svg{width:12px;height:12px}
-      .cardActions{align-items:flex-end}
-      .likeBtn{width:38px;height:38px;border-radius:12px}
-      .likeCount{font-size:.7rem}
-      .progress{gap:6px}
-      .progressTop{font-size:.7rem}
-      .bar{height:8px}
-      .drawer{width:calc(100vw - 12px);height:calc(100vh - 12px);margin:6px;padding:14px;border-radius:24px}
-      .themeSwitch{min-width:auto;padding:6px 10px}
-      .themeLabel{display:none}
+      .grid{grid-template-columns:1fr}
+      .card{
+        min-height:290px;
+      }
+      .appThumb{
+        width:58px;
+        height:58px;
+        border-radius:18px;
+      }
+      .titleRow h2{
+        font-size:.95rem;
+      }
+      .desc{
+        font-size:.88rem;
+      }
+      .launchBtn{
+        font-size:.9rem;
+      }
     }
   </style>
 </head>
-<body data-scheme="navy">
+<body>
   <canvas id="bgCanvas"></canvas>
   <canvas id="fxCanvas"></canvas>
 
@@ -426,13 +272,7 @@
     </nav>
 
     <div class="navRight">
-      <button class="iconBtn" id="menuBtn" type="button" aria-label="Open menu">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
-      </button>
-      <button class="themeSwitch" id="schemeSwitch" type="button" aria-label="Toggle light and navy blue theme">
-        <span class="switchTrack"><span class="switchThumb"></span></span>
-        <span class="themeLabel" id="schemeLabel">NavyBlue</span>
-      </button>
+      <div class="statusPill" id="liveStatus"><span class="dot"></span><span>Connecting…</span></div>
     </div>
   </header>
 
@@ -444,11 +284,11 @@
             <div class="heroBadgeRow">
               <span class="badge">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l2.7 5.48L20.7 8.3l-4.35 4.24L17.37 19 12 16.18 6.63 19l1.02-6.46L3.3 8.3l6-0.82L12 2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-                Active
+                🟢 Live Feed
               </span>
               <span class="badge">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.5 7.5l9 9M16.5 7.5l-9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-                v26.0
+                Global / Realtime
               </span>
             </div>
             <h1 id="heroTitle">MozLaunch</h1>
@@ -466,7 +306,7 @@
             </div>
             <div class="statCard">
               <div class="statIcon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 7.5h12v10H6v-10Z" stroke="currentColor" stroke-width="1.7"/><path d="M9 9h6M9 12h6M9 15h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
-              <div><strong id="appsCount">0</strong><span>App items</span></div>
+              <div><strong id="appsCount">0</strong><span>App / File items</span></div>
             </div>
           </div>
         </div>
@@ -474,13 +314,14 @@
 
       <section class="toolbar glass" id="all">
         <div class="search">
-          <svg class="searchIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="searchIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="rgba(226,232,240,.78)" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="rgba(226,232,240,.78)" stroke-width="2" stroke-linecap="round"/></svg>
           <input id="searchInput" type="text" placeholder="Search titles, tags, sizes, or descriptions" autocomplete="off" />
         </div>
         <div class="controls" aria-label="Filters">
           <button class="chip active" data-filter="All" type="button">All</button>
           <button class="chip" data-filter="Games" type="button">Games</button>
           <button class="chip" data-filter="Apps" type="button">Apps</button>
+          <button class="chip" data-filter="File" type="button">File</button>
           <div class="count" id="countBadge">0 items</div>
         </div>
       </section>
@@ -488,51 +329,32 @@
       <section id="apps" class="srOnly" aria-hidden="true"></section>
       <section id="games" class="srOnly" aria-hidden="true"></section>
       <section id="grid" class="grid" aria-live="polite"></section>
-      <div class="footer"></div>
+      <div class="footer">Live synced from Firestore collection <code>global</code>. Every update appears without refresh.</div>
     </div>
   </main>
 
-  <div id="modal" class="overlay" aria-hidden="true">
-    <div class="modalCard">
-      <div class="modalTop">
+  <div id="modal" class="overlay" aria-hidden="true" style="position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(2,6,23,.58);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:80;">
+    <div class="modalCard" style="width:min(560px,100%);border-radius:32px;border:1px solid rgba(148,163,184,.12);background:linear-gradient(180deg,rgba(12,23,41,.94),rgba(7,15,28,.92));box-shadow:0 30px 90px rgba(0,0,0,.42);padding:22px;animation:pop .22s ease both;">
+      <div class="modalTop" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;">
         <div>
-          <h3 class="modalTitle" id="modalTitle">Launching</h3>
-          <p class="modalSub" id="modalSub">Preparing launch</p>
+          <h3 class="modalTitle" id="modalTitle" style="margin:0;font-size:1.14rem;line-height:1.2;letter-spacing:-.02em;">Launching</h3>
+          <p class="modalSub" id="modalSub" style="margin:6px 0 0;color:var(--muted);line-height:1.5;font-size:.95rem;">Preparing launch</p>
         </div>
-        <button class="close" id="closeModal" type="button" aria-label="Close">×</button>
+        <button class="close" id="closeModal" type="button" aria-label="Close" style="width:42px;height:42px;border-radius:14px;border:1px solid rgba(148,163,184,.12);background:rgba(255,255,255,.04);color:var(--text);font-size:20px;cursor:pointer;">×</button>
       </div>
-      <div class="spinnerRow"><div class="spinner" aria-hidden="true"></div></div>
-      <div class="loaderWrap">
-        <div class="loaderLine"><span id="stageLabel">Loading resources</span><span id="stagePct">0%</span></div>
-        <div class="bar"><span id="modalBar"></span></div>
-        <p class="stageText">Opening item and preparing the direct link.</p>
+      <div class="spinnerRow" style="display:flex;justify-content:center;padding:10px 0 2px;"><div class="spinner" aria-hidden="true" style="width:52px;height:52px;border-radius:50%;border:4px solid rgba(59,130,246,.12);border-top-color:rgba(59,130,246,.96);border-right-color:rgba(124,58,237,.92);animation:spin .9s linear infinite;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)"></div></div>
+      <div class="loaderWrap" style="display:grid;gap:12px;margin-top:12px;">
+        <div class="loaderLine" style="display:flex;justify-content:space-between;gap:12px;align-items:center;color:#d7e5fb;font-size:.92rem;font-weight:800;"><span id="stageLabel">Loading resources</span><span id="stagePct">0%</span></div>
+        <div class="bar" style="height:11px;border-radius:999px;overflow:hidden;border:1px solid rgba(148,163,184,.12);background:rgba(255,255,255,.04)"><span id="modalBar" style="display:block;height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--accent3),var(--accent2));transition:width 120ms linear"></span></div>
+        <p class="stageText" style="margin:0;color:var(--muted);font-size:.92rem;line-height:1.5;">Opening item and preparing the direct link.</p>
       </div>
     </div>
   </div>
 
-  <div id="drawerOverlay" class="drawerOverlay" aria-hidden="true" style="display:none;">
-    <aside class="drawer glass" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
-      <div class="drawerHeader">
-        <div class="drawerTitle">
-          <strong id="drawerTitle">Menu</strong>
-        </div>
-        <button class="close" id="closeDrawer" type="button" aria-label="Close menu">×</button>
-      </div>
-      <div class="drawerList" id="drawerList">
-        <button class="drawerLink" type="button" data-action="open" data-key="tutorial">Tutorial</button>
-        <button class="drawerLink" type="button" data-action="open" data-key="reportBug">Report Bug</button>
-        <button class="drawerLink" type="button" data-action="open" data-key="requestFile">Request File</button>
-        <button class="drawerLink copyBtn" type="button" data-action="copy" data-key="joinDiscord">Join Discord</button>
-        <button class="drawerLink" type="button" data-action="open" data-key="updateLogs">Update logs</button>
-      </div>
-    </aside>
-  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-  <div class="toastWrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
-
-  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyCbtNoRho0NAydgqEz0iKXotqBXJpmubZk",
       authDomain: "modlaunch.firebaseapp.com",
@@ -542,20 +364,8 @@
       appId: "1:16749876586:web:6e6afba261424858f40113"
     };
 
-    const initialAppName = window.MOZLAUNCH_TITLE || "MozLaunch";
-    const initialSubtitle = window.MOZLAUNCH_SUBTITLE || "by SkyeMoz";
-    const defaultMenuLinks = window.MOZLAUNCH_MENU_LINKS || {
-      tutorial: "/tutorial",
-      reportBug: "/report-bug",
-      requestFile: "/request-file",
-      joinDiscord: "https://discord.gg/qbRRNGaMzU",
-      updateLogs: "/update-logs"
-    };
-
-    const fallbackManifest = { appName: initialAppName, subtitle: initialSubtitle, items: [] };
-    const state = { manifest: fallbackManifest, items: [], globalLikes: {}, filter: "All", query: "", voted: {} };
-    const LIKE_COOLDOWN_MS = 60_000;
-    const VOTE_STORAGE_KEY = "mozlaunch_vote_timestamps";
+    const fallbackManifest = { appName: "MozLaunch", subtitle: "by SkyeMoz", items: [] };
+    const state = { manifest: fallbackManifest, filter: "All", query: "" };
 
     const grid = document.getElementById("grid");
     const searchInput = document.getElementById("searchInput");
@@ -577,94 +387,63 @@
     const stagePct = document.getElementById("stagePct");
     const modalBar = document.getElementById("modalBar");
     const closeModal = document.getElementById("closeModal");
-    const menuBtn = document.getElementById("menuBtn");
-    const drawerOverlay = document.getElementById("drawerOverlay");
-    const closeDrawer = document.getElementById("closeDrawer");
-    const drawerList = document.getElementById("drawerList");
-    const schemeSwitch = document.getElementById("schemeSwitch");
-    const schemeLabel = document.getElementById("schemeLabel");
-    const toastWrap = document.getElementById("toastWrap");
+    const liveStatus = document.getElementById("liveStatus");
+    let activeLaunch = null, rafId = 0, backgroundSeed = Math.random();
 
-    let db = null, unsubscribeItems = null, unsubscribeGlobal = null, activeLaunch = null, rafId = 0, backgroundSeed = Math.random();
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const colRef = collection(db, "global");
 
-    const esc = v => String(v ?? "").replace(/[&<>\"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));
-    const slug = v => String(v ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "item";
-    const toast = msg => { const el = document.createElement("div"); el.className = "toast"; el.textContent = msg; toastWrap.appendChild(el); setTimeout(() => { el.style.opacity = "0"; el.style.transform = "translateY(10px) scale(.98)"; }, 2200); setTimeout(() => el.remove(), 2600); };
-    function toDate(v){ if(!v) return null; if(typeof v?.toDate === "function") return v.toDate(); if(typeof v?.seconds === "number") return new Date(v.seconds * 1000); const d = new Date(v); return Number.isNaN(d.getTime()) ? null : d; }
-    function formatRelativeTime(v){ const d = toDate(v); if(!d) return "just now"; const s = Math.max(0, Math.floor((Date.now() - d.getTime()) / 1000)); if(s < 1) return "1s ago"; if(s < 60) return `${s}s ago`; const m = Math.floor(s / 60); if(m < 60) return `${m}m ago`; const h = Math.floor(m / 60); if(h < 24) return `${h}h ago`; const day = Math.floor(h / 24); if(day < 365) return `${day}d ago`; return `${Math.floor(day / 365)}y ago`; }
-    const getLink = item => item.launch || item.link || item.url || item.href || "";
-    function iconSvg(name){
+    function esc(v){ return String(v ?? "").replace(/[&<>"]/g, s => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[s])); }
+    function fmtDate(v){
+      try {
+        if(!v) return "";
+        if(typeof v === "string") return new Intl.DateTimeFormat(undefined, { year:"numeric", month:"short", day:"numeric" }).format(new Date(v));
+        if(v?.toDate) return new Intl.DateTimeFormat(undefined, { year:"numeric", month:"short", day:"numeric" }).format(v.toDate());
+        if(v?.seconds) return new Intl.DateTimeFormat(undefined, { year:"numeric", month:"short", day:"numeric" }).format(new Date(v.seconds * 1000));
+        return new Intl.DateTimeFormat(undefined, { year:"numeric", month:"short", day:"numeric" }).format(new Date(v));
+      } catch { return esc(v); }
+    }
+
+    function iconSvg(n){
       const i = {
-        spark:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.78 5.45L19.5 10.2l-4.18 3.04L16.96 19 12 15.8 7.04 19l1.64-5.76L4.5 10.2l5.72-1.75L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`,
-        like:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.7A4 4 0 0 1 19 11c0 5.4-7 10-7 10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
-        clock:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.5v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-        note:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M7 3.5h7l3.5 3.5V20a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 20V5A1.5 1.5 0 0 1 7 3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3.5V7h3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 11h8M8 14h8M8 17h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
-        gamepad:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M7 10h10a4 4 0 0 1 4 4v.5A3.5 3.5 0 0 1 17.5 18H6.5A3.5 3.5 0 0 1 3 14.5V14a4 4 0 0 1 4-4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.5 13.2h3M10 11.7v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M16.2 12.6h.01M18 14h.01" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>`
+        note:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3.5h7l3.5 3.5V20a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 20V5A1.5 1.5 0 0 1 7 3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 3.5V7h3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 11h8M8 14h8M8 17h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+        gamepad:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10h10a4 4 0 0 1 4 4v.5A3.5 3.5 0 0 1 17.5 18H6.5A3.5 3.5 0 0 1 3 14.5V14a4 4 0 0 1 4-4Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.5 13.2h3M10 11.7v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M16.2 12.6h.01M18 14h.01" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>`,
+        spark:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l1.78 5.45L19.5 10.2l-4.18 3.04L16.96 19 12 15.8 7.04 19l1.64-5.76L4.5 10.2l5.72-1.75L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`,
+        car:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.3 10.2 7.7 7.4A2 2 0 0 1 9.48 6.3h5.04a2 2 0 0 1 1.78 1.1l1.4 2.8M5 14h14v3a1 1 0 0 1-1 1h-.7a1.3 1.3 0 0 1-1.3-1.3V16H8v.7A1.3 1.3 0 0 1 6.7 18H6a1 1 0 0 1-1-1v-3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M7 14.2h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8.5" cy="15.9" r="1" stroke="currentColor" stroke-width="1.5"/><circle cx="15.5" cy="15.9" r="1" stroke="currentColor" stroke-width="1.5"/></svg>`,
+        tools:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14.5 4.5a4.5 4.5 0 0 0-4.08 6.4L4.6 16.7a1.8 1.8 0 1 0 2.55 2.55l5.8-5.82a4.5 4.5 0 1 0 1.55-8.93Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M15.3 7.2l1.5 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+        moon:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15.5 3.5a7.5 7.5 0 1 0 5 13.1 8 8 0 1 1-5-13.1Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`
       };
-      return i[name] || i.spark;
+      return i[n] || i.spark;
     }
 
-    function loadVoteTimes(){
-      try{
-        const raw = localStorage.getItem(VOTE_STORAGE_KEY);
-        const data = raw ? JSON.parse(raw) : {};
-        if(data && typeof data === "object") state.voted = data;
-      }catch{}
-    }
-    function saveVoteTimes(){ try{ localStorage.setItem(VOTE_STORAGE_KEY, JSON.stringify(state.voted || {})); }catch{} }
-    function timeUntilNextVote(itemId){
-      const ts = Number(state.voted?.[itemId] || 0);
-      if(!ts) return 0;
-      return Math.max(0, LIKE_COOLDOWN_MS - (Date.now() - ts));
-    }
-    function canVoteNow(itemId){ return timeUntilNextVote(itemId) <= 0; }
-
-    function normalize(item, id){
-      return {
-        id: item.id || id || slug(item.title),
-        title: item.title || "Untitled",
-        description: item.description || "",
-        type: item.type || "Apps",
-        tag: item.tag || item.type || "Item",
-        size: item.size || "",
-        launch: getLink(item),
-        thumbnail: item.thumbnail || item.image || "",
-        icon: item.icon || "spark",
-        uploadedAt: item.uploadedAt ?? item.createdAt ?? item.timestamp ?? item.time ?? item.date ?? null,
-        likes: Number(item.likes || 0)
-      };
-    }
     function appPreview(item){ return item.thumbnail ? `<img src="${esc(item.thumbnail)}" alt="${esc(item.title)} thumbnail" loading="lazy" />` : `<div class="appIconFallback">${iconSvg(item.icon)}</div>`; }
-    function mergeAndSort(items){
-      return items
-        .map(item => ({ ...item, likes: Number(state.globalLikes[item.id] ?? item.likes ?? 0) }))
-        .sort((a,b)=> (toDate(b.uploadedAt)?.getTime()||0) - (toDate(a.uploadedAt)?.getTime()||0));
+    function normalize(item){ return [item.title,item.description,item.type,item.tag,item.size,item.date,item.icon,item.launch].join(" ").toLowerCase(); }
+
+    function isTimestampLike(v){ return v && typeof v === "object" && (typeof v.seconds === "number" || typeof v.toDate === "function"); }
+    function sortKey(item){
+      if(item.createdAt && isTimestampLike(item.createdAt)) return item.createdAt.seconds || item.createdAt.toDate?.().getTime?.() || 0;
+      if(item.date){ const t = Date.parse(item.date); if(!Number.isNaN(t)) return t; }
+      return 0;
     }
+
     function filteredItems(){
       const q = state.query.trim().toLowerCase();
-      return state.items.filter(item => (state.filter === "All" || esc(item.type) === state.filter) && (!q || [item.title,item.description,item.type,item.tag,item.size,formatRelativeTime(item.uploadedAt),item.launch].join(" ").toLowerCase().includes(q)));
-    }
-    function updateStats(items){
-      totalCount.textContent = state.items.length;
-      gamesCount.textContent = state.items.filter(i => esc(i.type) === "Games").length;
-      appsCount.textContent = state.items.filter(i => esc(i.type) === "Apps").length;
-      countBadge.textContent = `${items.length} item${items.length===1?"":"s"}`;
+      return (state.manifest?.items || []).filter(item => {
+        const typeOk = state.filter === "All" || item.type === state.filter;
+        const queryOk = !q || normalize(item).includes(q);
+        return typeOk && queryOk;
+      });
     }
 
-    async function writeLike(item){
-      if(!db || !item.id) return false;
-      try{
-        await db.collection("global").doc(item.id).set({
-          id:item.id,
-          title:item.title,
-          likes: firebase.firestore.FieldValue.increment(1),
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge:true });
-        return true;
-      }catch(err){
-        console.warn(err);
-        return false;
-      }
+    function updateStats(items){
+      const total = state.manifest?.items?.length || 0;
+      const games = (state.manifest?.items || []).filter(i => i.type === "Games").length;
+      const apps = (state.manifest?.items || []).filter(i => i.type !== "Games").length;
+      totalCount.textContent = total;
+      gamesCount.textContent = games;
+      appsCount.textContent = apps;
+      countBadge.textContent = `${items.length} item${items.length === 1 ? "" : "s"}`;
     }
 
     function render(){
@@ -672,17 +451,13 @@
       updateStats(items);
       grid.innerHTML = "";
       if(!items.length){
-        grid.innerHTML = `<div class="empty">No matching items found. Connect Firebase or add entries in <code>settings/manifest.json</code>.</div>`;
+        grid.innerHTML = `<div class="empty">No matching items found. Add uploads in the uploader panel and they will appear here live.</div>`;
         return;
       }
-
       items.forEach((item, index) => {
         const card = document.createElement("article");
         card.className = "card";
-        card.style.animationDelay = `${index * 45}ms`;
-        const liked = !canVoteNow(item.id);
-        const uploaded = formatRelativeTime(item.uploadedAt);
-
+        card.style.animationDelay = `${index * 55}ms`;
         card.innerHTML = `
           <div class="cardGlow"></div>
           <div class="cardTop">
@@ -693,17 +468,14 @@
                   <h2>${esc(item.title)}</h2>
                   <span class="tag">${esc(item.tag || item.type || "Item")}</span>
                 </div>
-                <p class="desc">${esc(item.description)}</p>
+                <p class="desc">${esc(item.description || "")}</p>
               </div>
-            </div>
-            <div class="cardActions">
-              <button class="likeBtn ${liked ? "liked" : ""}" type="button" aria-label="Like ${esc(item.title)}" aria-pressed="${liked ? "true" : "false"}" ${liked ? "disabled" : ""}>${iconSvg("like")}</button>
-              <span class="likeCount"><span class="likeTotal">${Number(item.likes || 0)}</span> likes</span>
             </div>
           </div>
           <div class="meta">
-            <span class="metaItem timeItem">${iconSvg("clock")} Uploaded ${uploaded}</span>
-            ${item.size ? `<span class="metaItem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 12h12M6 8h7M6 16h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>${esc(item.size)}</span>` : ""}
+            <span class="metaItem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M7 3.5v2M17 3.5v2M5 8.5h14M6.5 6.5h11A1.5 1.5 0 0 1 19 8v10.5A1.5 1.5 0 0 1 17.5 20h-11A1.5 1.5 0 0 1 5 18.5V8A1.5 1.5 0 0 1 6.5 6.5Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>${fmtDate(item.date)}</span>
+            <span class="metaItem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 12h12M6 8h7M6 16h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>${esc(item.size || "")}</span>
+            <span class="metaItem">${esc(item.type || "Item")}</span>
           </div>
           <div class="progress" aria-hidden="true">
             <div class="progressTop"><span class="pStage">Ready</span><span class="pPct">0%</span></div>
@@ -711,55 +483,28 @@
           </div>
           <div class="actions"><button class="launchBtn" type="button">Launch</button></div>
         `;
-
-        const launchBtn = card.querySelector(".launchBtn");
-        const likeBtn = card.querySelector(".likeBtn");
-        const likeTotal = card.querySelector(".likeTotal");
+        const btn = card.querySelector(".launchBtn");
         const progress = card.querySelector(".progress");
         const pStage = card.querySelector(".pStage");
         const pPct = card.querySelector(".pPct");
         const bar = card.querySelector(".bar > span");
         const stages = ["Loading package","Optimizing assets","Building session","Opening link"];
-
-        const launchCard = () => startLaunch({
-          title: esc(item.title),
-          sub: esc(item.description),
-          progress,
-          pStage,
-          pPct,
-          bar,
-          button: launchBtn,
-          stages,
-          link: item.launch
-        });
-
-        launchBtn.addEventListener("click", launchCard);
-        card.addEventListener("click", e => {
-          if(e.target.closest(".likeBtn") || e.target.closest(".launchBtn")) return;
-          launchCard();
-        });
-
-        likeBtn.addEventListener("click", async e => {
-          e.stopPropagation();
-          const remaining = timeUntilNextVote(item.id);
-          if(remaining > 0){
-            toast(`Wait ${Math.ceil(remaining / 1000)}s to like again`);
-            return;
-          }
-          likeBtn.disabled = true;
-          state.voted[item.id] = Date.now();
-          saveVoteTimes();
-          const currentLikes = Number(likeTotal.textContent || item.likes || 0) + 1;
-          if(likeTotal) likeTotal.textContent = String(currentLikes);
-          state.globalLikes[item.id] = currentLikes;
-          await writeLike(item);
-          toast(`Liked (${item.title})`);
-          render();
-        });
-
+        btn.addEventListener("click", () => startLaunch({
+          title: esc(item.title), sub: esc(item.description),
+          progress, pStage, pPct, bar, button: btn, stages, link: item.launch
+        }));
         grid.appendChild(card);
       });
     }
+
+    function setFilter(filter){
+      state.filter = filter;
+      chips.forEach(c => c.classList.toggle("active", c.dataset.filter === filter));
+      render();
+      highlightNav(filter === "All" ? "all" : filter.toLowerCase());
+    }
+    chips.forEach(chip => chip.addEventListener("click", () => setFilter(chip.dataset.filter)));
+    searchInput.addEventListener("input", () => { state.query = searchInput.value; render(); });
 
     function openModal(title, sub){
       modalTitle.textContent = title || "Launching";
@@ -767,10 +512,7 @@
       modal.style.display = "grid";
       modal.setAttribute("aria-hidden","false");
     }
-    function closeLaunchModal(){
-      modal.style.display = "none";
-      modal.setAttribute("aria-hidden","true");
-    }
+    function closeLaunchModal(){ modal.style.display = "none"; modal.setAttribute("aria-hidden","true"); }
     closeModal.addEventListener("click", () => { if(activeLaunch?.button) activeLaunch.button.disabled = false; activeLaunch = null; closeLaunchModal(); });
     modal.addEventListener("click", e => { if(e.target === modal){ if(activeLaunch?.button) activeLaunch.button.disabled = false; activeLaunch = null; closeLaunchModal(); } });
 
@@ -785,35 +527,30 @@
 
     function goToLink(link){
       const safeLink = String(link || "").trim();
-      if(!safeLink || safeLink === "#") return false;
+      if(!safeLink || safeLink === "#") return;
       if(safeLink.startsWith("#")){
         const el = document.querySelector(safeLink);
-        if(el) el.scrollIntoView({ behavior:"smooth", block:"start" });
+        if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
         history.replaceState(null, "", safeLink);
-        return true;
+        return;
       }
-      try{
-        window.location.href = new URL(safeLink, window.location.href).href;
-        return true;
-      }catch{
+      if(safeLink.startsWith("./") || safeLink.startsWith("../") || safeLink.startsWith("/")){
         window.location.href = safeLink;
-        return true;
+        return;
       }
+      try { window.location.href = new URL(safeLink, window.location.href).href; }
+      catch { window.location.href = safeLink; }
     }
 
     function startLaunch(ctx){
       if(activeLaunch) return;
-      if(!ctx.link || ctx.link === "#"){
-        toast("No launch link set");
-        return;
-      }
       activeLaunch = ctx;
       ctx.button.disabled = true;
       ctx.progress.classList.add("active");
       ctx.progress.setAttribute("aria-hidden","false");
       openModal(ctx.title, ctx.sub);
 
-      const duration = 1100 + Math.floor(Math.random() * 1000);
+      const duration = 1100 + Math.floor(Math.random() * 900);
       const start = performance.now();
       const totalStages = ctx.stages.length;
       cancelAnimationFrame(rafId);
@@ -834,6 +571,9 @@
           return;
         }
 
+        ctx.pStage.textContent = "Opening";
+        stageLabel.textContent = "Opening";
+        stagePct.textContent = "100%";
         setTimeout(() => {
           ctx.progress.classList.remove("active");
           ctx.progress.setAttribute("aria-hidden","true");
@@ -851,112 +591,67 @@
     }
 
     function highlightNav(target){ navLinks.forEach(link => link.classList.toggle("active", link.dataset.nav === target)); }
-    navLinks.forEach(link => link.addEventListener("click", e => {
-      const target = link.getAttribute("href");
-      if(!target || !target.startsWith("#")) return;
-      const el = document.querySelector(target);
-      if(el){
-        e.preventDefault();
-        el.scrollIntoView({ behavior:"smooth", block:"start" });
-        history.replaceState(null, "", target);
-        highlightNav(link.dataset.nav);
-      }
-    }));
-
-    function setScheme(scheme){
-      const value = scheme === "light" ? "light" : "navy";
-      document.body.dataset.scheme = value;
-      schemeLabel.textContent = value === "navy" ? "NavyBlue" : "Light";
-      try{ localStorage.setItem("mozlaunch_scheme", value); }catch{}
-    }
-    schemeSwitch.addEventListener("click", () => setScheme(document.body.dataset.scheme === "navy" ? "light" : "navy"));
-
-    function openDrawer(){ drawerOverlay.style.display = "grid"; drawerOverlay.setAttribute("aria-hidden","false"); }
-    function closeDrawerMenu(){ drawerOverlay.style.display = "none"; drawerOverlay.setAttribute("aria-hidden","true"); }
-    menuBtn.addEventListener("click", openDrawer);
-    closeDrawer.addEventListener("click", closeDrawerMenu);
-    drawerOverlay.addEventListener("click", e => { if(e.target === drawerOverlay) closeDrawerMenu(); });
-    drawerList.addEventListener("click", async e => {
-      const btn = e.target.closest(".drawerLink");
-      if(!btn) return;
-      const key = btn.dataset.key;
-      const action = btn.dataset.action || "open";
-      closeDrawerMenu();
-      if(action === "copy"){
-        try{ await navigator.clipboard.writeText(defaultMenuLinks.joinDiscord || "https://discord.gg/qbRRNGaMzU"); toast("Discord invite copied"); }
-        catch{ toast("Copy failed"); }
-        return;
-      }
-      if(!goToLink(defaultMenuLinks[key])) toast("No link set for this button");
+    navLinks.forEach(link => {
+      link.addEventListener("click", e => {
+        const target = link.getAttribute("href");
+        if(!target || !target.startsWith("#")) return;
+        const el = document.querySelector(target);
+        if(el){
+          e.preventDefault();
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          history.replaceState(null, "", target);
+          highlightNav(link.dataset.nav);
+        }
+      });
     });
 
-    function applyManifest(data){
-      const items = Array.isArray(data?.items) ? data.items.map((item, index) => normalize(item, item.id || item.docId || `item-${index}`)) : [];
-      state.manifest = { appName: data?.appName || initialAppName, subtitle: data?.subtitle || initialSubtitle, items };
-      heroTitle.textContent = esc(state.manifest.appName);
-      heroSubtitle.textContent = esc(state.manifest.subtitle);
-      navTitle.textContent = esc(state.manifest.appName);
-      navSubtitle.textContent = esc(state.manifest.subtitle);
-      state.items = mergeAndSort(items);
-      render();
+    function setLiveStatus(text, live=true){
+      liveStatus.innerHTML = `<span class="dot" style="background:${live ? '#22c55e' : '#f59e0b'};box-shadow:0 0 0 5px ${live ? 'rgba(34,197,94,.14)' : 'rgba(245,158,11,.14)'}"></span><span>${esc(text)}</span>`;
     }
-    async function loadManifestJson(){
-      try{
-        const res = await fetch("./settings/manifest.json", { cache:"no-store" });
-        if(!res.ok) throw new Error("manifest not found");
-        applyManifest(await res.json());
-        return true;
-      }catch{
-        applyManifest(fallbackManifest);
-        return false;
-      }
-    }
-    function initFirebase(){
-      if(!firebaseConfig?.apiKey || typeof window.firebase === "undefined") return false;
-      if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-      db = firebase.firestore();
-      return true;
-    }
-    function syncItems(){ state.items = mergeAndSort(state.manifest.items); render(); }
-    async function loadFirebaseItems(){
-      if(!initFirebase()) return false;
-      try{
-        if(unsubscribeItems) unsubscribeItems();
-        if(unsubscribeGlobal) unsubscribeGlobal();
 
-        unsubscribeItems = db.collection("items").onSnapshot(snapshot => {
-          const docs = snapshot.docs.map(doc => normalize(doc.data() || {}, doc.id));
-          state.manifest = { appName: initialAppName, subtitle: initialSubtitle, items: docs };
-          heroTitle.textContent = esc(initialAppName);
-          heroSubtitle.textContent = esc(initialSubtitle);
-          navTitle.textContent = esc(initialAppName);
-          navSubtitle.textContent = esc(initialSubtitle);
-          syncItems();
-        }, async () => {
-          await loadManifestJson();
+    function loadFirestore(){
+      setLiveStatus("Connecting…", true);
+      onSnapshot(colRef, (snap) => {
+        const items = snap.docs.map(docSnap => {
+          const d = docSnap.data() || {};
+          return {
+            id: docSnap.id,
+            title: d.title || "just.",
+            description: d.description || "",
+            type: d.type || "Apps",
+            tag: d.tag || "",
+            size: d.size || "",
+            date: d.date || d.createdAt || "",
+            icon: d.icon || "spark",
+            thumbnail: d.thumbnail || "",
+            launch: d.launch || "",
+            createdAt: d.createdAt || null,
+            updatedAt: d.updatedAt || null
+          };
         });
 
-        unsubscribeGlobal = db.collection("global").onSnapshot(snapshot => {
-          const likes = {};
-          snapshot.docs.forEach(doc => { likes[doc.id] = Number((doc.data() || {}).likes || 0); });
-          state.globalLikes = likes;
-          syncItems();
-        });
-
-        return true;
-      }catch(err){
-        console.warn("Firebase load failed", err);
-        await loadManifestJson();
-        return false;
-      }
+        items.sort((a,b) => sortKey(b) - sortKey(a));
+        state.manifest = { appName: "MozLaunch", subtitle: "by SkyeMoz", items };
+        heroTitle.textContent = "MozLaunch";
+        heroSubtitle.textContent = "by SkyeMoz";
+        navTitle.textContent = "MozLaunch";
+        navSubtitle.textContent = "by SkyeMoz";
+        setLiveStatus(`Live • ${items.length} docs`, true);
+        render();
+      }, (err) => {
+        console.error(err);
+        setLiveStatus("Firestore error", false);
+        grid.innerHTML = `<div class="empty">Live feed could not connect. Check Firestore rules and Firebase config.</div>`;
+      });
     }
 
     function initBackground(){
       const bg = document.getElementById("bgCanvas"), fx = document.getElementById("fxCanvas");
       const bctx = bg.getContext("2d"), fctx = fx.getContext("2d");
       let w = 0, h = 0, t = 0;
-      const bubbles = Array.from({ length: 56 }, () => ({ x: Math.random(), y: Math.random(), r:.9 + Math.random()*2, a:.08 + Math.random()* .18, vx:(Math.random()-.5)*.00024, vy:(Math.random()-.5)*.00024 }));
+      const bubbles = Array.from({ length: 56 }, () => ({ x: Math.random(), y: Math.random(), r:.9 + Math.random() * 2, a:.08 + Math.random() * .18, vx:(Math.random()-.5)*.00024, vy:(Math.random()-.5)*.00024 }));
       const particles = Array.from({ length: 72 }, () => ({ x: Math.random(), y: Math.random(), vx:(Math.random()-.5)*.00072, vy:(Math.random()-.5)*.00072, r:1 + Math.random()*2.1 }));
+
       function resize(){
         w = bg.width = fx.width = Math.floor(window.innerWidth * devicePixelRatio);
         h = bg.height = fx.height = Math.floor(window.innerHeight * devicePixelRatio);
@@ -965,16 +660,19 @@
       }
       window.addEventListener("resize", resize, { passive:true });
       resize();
+
       function draw(){
         t += .0025;
         bctx.clearRect(0,0,w,h);
         fctx.clearRect(0,0,w,h);
+
         const g = bctx.createLinearGradient(0,0,w,h);
-        g.addColorStop(0, `rgba(15,76,129,${.08 + Math.sin(t + backgroundSeed) * .01})`);
-        g.addColorStop(.5, `rgba(255,255,255,${.03 + Math.cos(t * 1.1) * .01})`);
-        g.addColorStop(1, `rgba(29,111,168,${.05 + Math.sin(t * .8 + 1) * .01})`);
+        g.addColorStop(0, `rgba(59,130,246,${.05 + Math.sin(t + backgroundSeed) * .01})`);
+        g.addColorStop(.5, `rgba(255,255,255,${.09 + Math.cos(t * 1.1) * .01})`);
+        g.addColorStop(1, `rgba(124,58,237,${.05 + Math.sin(t * .8 + 1) * .01})`);
         bctx.fillStyle = g;
         bctx.fillRect(0,0,w,h);
+
         for(const s of bubbles){
           s.x += s.vx; s.y += s.vy;
           if(s.x < -.05) s.x = 1.05;
@@ -982,10 +680,11 @@
           if(s.y < -.05) s.y = 1.05;
           if(s.y > 1.05) s.y = -.05;
           bctx.beginPath();
-          bctx.fillStyle = `rgba(78,160,255,${s.a})`;
+          bctx.fillStyle = `rgba(59,130,246,${s.a})`;
           bctx.arc(s.x*w, s.y*h, s.r*devicePixelRatio, 0, Math.PI*2);
           bctx.fill();
         }
+
         for(let i=0;i<particles.length;i++){
           const p = particles[i];
           p.x += p.vx; p.y += p.vy;
@@ -995,7 +694,7 @@
           if(p.y > 1.1) p.y = -.1;
           const x = p.x*w, y = p.y*h;
           fctx.beginPath();
-          fctx.fillStyle = "rgba(78,160,255,.45)";
+          fctx.fillStyle = "rgba(59,130,246,.40)";
           fctx.arc(x,y,p.r*devicePixelRatio,0,Math.PI*2);
           fctx.fill();
           for(let j=i+1;j<particles.length;j++){
@@ -1003,7 +702,7 @@
             const dx = (p.x-q.x)*w, dy = (p.y-q.y)*h, dist = Math.hypot(dx,dy), maxDist = 170*devicePixelRatio;
             if(dist < maxDist){
               fctx.beginPath();
-              fctx.strokeStyle = `rgba(78,160,255,${.08*(1-dist/maxDist)})`;
+              fctx.strokeStyle = `rgba(59,130,246,${.08*(1-dist/maxDist)})`;
               fctx.lineWidth = 1;
               fctx.moveTo(x,y);
               fctx.lineTo(q.x*w,q.y*h);
@@ -1016,13 +715,14 @@
       draw();
     }
 
-    const savedScheme = (() => { try { return localStorage.getItem("mozlaunch_scheme") || "navy"; } catch { return "navy"; } })();
-    setScheme(savedScheme === "light" ? "light" : "navy");
-    loadVoteTimes();
-    loadFirebaseItems();
-    initBackground();
-    setInterval(() => { if(Object.keys(state.voted || {}).length) render(); }, 1000);
     document.addEventListener("contextmenu", e => e.preventDefault());
+    initBackground();
+    loadFirestore();
+
+    if(location.hash){
+      const link = navLinks.find(n => n.getAttribute("href") === location.hash);
+      if(link) highlightNav(link.dataset.nav);
+    }
   </script>
 </body>
-  </html>
+</html>
