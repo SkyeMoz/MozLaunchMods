@@ -351,9 +351,29 @@
     </div>
   </div>
 
+  <div id="noticeModal" class="overlay" aria-hidden="true" style="position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(2,6,23,.64);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:95;">
+    <div class="noticeCard" style="width:min(680px,100%);border-radius:34px;border:1px solid rgba(148,163,184,.14);background:linear-gradient(180deg,rgba(12,23,41,.98),rgba(7,15,28,.96));box-shadow:0 34px 100px rgba(0,0,0,.48);overflow:hidden;animation:pop .22s ease both;">
+      <div id="noticeBannerWrap" style="display:none;width:100%;aspect-ratio:16/7;overflow:hidden;border-bottom:1px solid rgba(148,163,184,.12);background:rgba(255,255,255,.03);">
+        <img id="noticeBanner" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" />
+      </div>
+      <div style="padding:22px;display:grid;gap:16px;">
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;">
+          <div style="min-width:0;display:grid;gap:10px;">
+            <span style="display:inline-flex;align-items:center;gap:8px;width:fit-content;padding:8px 12px;border-radius:999px;border:1px solid rgba(96,165,250,.18);background:rgba(59,130,246,.10);color:#dbeafe;font-weight:900;font-size:.82rem;letter-spacing:.2px;">Global notice</span>
+            <h3 id="noticeTitle" style="margin:0;font-size:clamp(1.2rem,1.8vw,1.55rem);line-height:1.15;letter-spacing:-.03em;">Important update</h3>
+            <p id="noticeDesc" style="margin:0;color:var(--muted);line-height:1.6;font-size:.98rem;white-space:pre-wrap;word-break:break-word;">Loading…</p>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;">
+          <button id="noticeContinue" type="button" style="border:0;border-radius:18px;padding:12px 18px;color:#fff;cursor:pointer;font-weight:900;font-size:.95rem;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 16px 28px rgba(59,130,246,.18);">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { getFirestore, collection, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCbtNoRho0NAydgqEz0iKXotqBXJpmubZk",
@@ -388,6 +408,15 @@
     const modalBar = document.getElementById("modalBar");
     const closeModal = document.getElementById("closeModal");
     const liveStatus = document.getElementById("liveStatus");
+    const noticeModal = document.getElementById("noticeModal");
+    const noticeBannerWrap = document.getElementById("noticeBannerWrap");
+    const noticeBanner = document.getElementById("noticeBanner");
+    const noticeTitle = document.getElementById("noticeTitle");
+    const noticeDesc = document.getElementById("noticeDesc");
+    const noticeContinue = document.getElementById("noticeContinue");
+    const NOTICE_ACK_KEY = "mozlaunch_acknowledged_notice_v1";
+
+    let activeNotice = null;
     let activeLaunch = null, rafId = 0, backgroundSeed = Math.random();
 
     const app = initializeApp(firebaseConfig);
@@ -516,6 +545,70 @@
     closeModal.addEventListener("click", () => { if(activeLaunch?.button) activeLaunch.button.disabled = false; activeLaunch = null; closeLaunchModal(); });
     modal.addEventListener("click", e => { if(e.target === modal){ if(activeLaunch?.button) activeLaunch.button.disabled = false; activeLaunch = null; closeLaunchModal(); } });
 
+    function safeJson(v){
+      try { return JSON.stringify(v); } catch { return String(v ?? ""); }
+    }
+    function noticeVersion(notice){
+      if(!notice) return "";
+      const payload = {
+        id: notice.id || "",
+        title: notice.title || "",
+        bannerUrl: notice.bannerUrl || "",
+        description: notice.description || "",
+        enabled: notice.enabled !== false,
+        updatedAt: notice.updatedAt || "",
+        createdAt: notice.createdAt || ""
+      };
+      return safeJson(payload);
+    }
+    function getAckedNoticeVersion(){
+      try { return localStorage.getItem(NOTICE_ACK_KEY) || ""; }
+      catch { return ""; }
+    }
+    function setAckedNoticeVersion(version){
+      try { localStorage.setItem(NOTICE_ACK_KEY, version); }
+      catch {}
+    }
+    function renderNotice(notice){
+      if(!notice || notice.enabled === false){
+        activeNotice = null;
+        noticeModal.style.display = "none";
+        noticeModal.setAttribute("aria-hidden","true");
+        return;
+      }
+
+      activeNotice = notice;
+      noticeTitle.textContent = notice.title || "Important update";
+      noticeDesc.textContent = notice.description || "";
+      const bannerUrl = String(notice.bannerUrl || "").trim();
+      if(bannerUrl){
+        noticeBanner.src = bannerUrl;
+        noticeBanner.alt = notice.title ? `${notice.title} banner` : "Notice banner";
+        noticeBannerWrap.style.display = "block";
+      }else{
+        noticeBanner.removeAttribute("src");
+        noticeBanner.alt = "";
+        noticeBannerWrap.style.display = "none";
+      }
+
+      const version = noticeVersion(notice);
+      if(getAckedNoticeVersion() === version){
+        noticeModal.style.display = "none";
+        noticeModal.setAttribute("aria-hidden","true");
+        return;
+      }
+
+      noticeModal.style.display = "grid";
+      noticeModal.setAttribute("aria-hidden","false");
+    }
+    function acknowledgeNotice(){
+      if(!activeNotice) return;
+      setAckedNoticeVersion(noticeVersion(activeNotice));
+      noticeModal.style.display = "none";
+      noticeModal.setAttribute("aria-hidden","true");
+    }
+    noticeContinue.addEventListener("click", acknowledgeNotice);
+
     logoButton.addEventListener("click", () => { window.scrollTo({ top: 0, behavior: "smooth" }); highlightNav("top"); });
     logoButton.addEventListener("keydown", e => {
       if(e.key === "Enter" || e.key === " "){
@@ -643,6 +736,26 @@
         setLiveStatus("Firestore error", false);
         grid.innerHTML = `<div class="empty">Live feed could not connect. Check Firestore rules and Firebase config.</div>`;
       });
+
+    const noticeRef = doc(db, "announcements", "global");
+    onSnapshot(noticeRef, (snap) => {
+      if(!snap.exists()){
+        renderNotice(null);
+        return;
+      }
+      const d = snap.data() || {};
+      renderNotice({
+        id: snap.id,
+        title: d.title || "Important update",
+        bannerUrl: d.bannerUrl || d.banner || d.image || "",
+        description: d.description || "",
+        enabled: d.enabled !== false,
+        createdAt: d.createdAt || null,
+        updatedAt: d.updatedAt || null
+      });
+    }, (err) => {
+      console.error(err);
+    });
     }
 
     function initBackground(){
